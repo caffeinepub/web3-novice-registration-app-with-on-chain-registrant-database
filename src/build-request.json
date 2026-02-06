@@ -1,0 +1,110 @@
+{
+  "kind": "build_request",
+  "title": "Auto-create user ID + badge on first login; add external site link and Events/Coming Soon page",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-11",
+      "text": "Add backend support to automatically issue and persist a unique user ID and a badge for each principal the first time they authenticate (first login), and provide APIs to read this information on subsequent logins.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "i want and app who create ID and badge when user login for the first time on it !"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When an authenticated principal calls the new/read API for their ID+badge and no record exists yet, the backend creates one automatically and returns it in the same call.",
+        "On later calls by the same principal, the backend returns the exact same user ID and badge as previously issued (no regeneration).",
+        "The user ID is unique across principals within the canister.",
+        "APIs enforce that a caller can only read their own ID+badge (unless admin access already exists and is explicitly allowed by the implementation).",
+        "Existing registrant CRUD and user profile APIs continue to work without breaking changes."
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Update the frontend to fetch and display the user’s issued ID and badge when they are authenticated, including immediately after first login, without blocking the existing profile setup/registration flow.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "create ID and badge when user login for the first time"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After a successful Internet Identity sign-in, the app requests the caller’s issued ID+badge from the backend and shows it in an appropriate place (e.g., header/account area and/or registration/profile area).",
+        "If the backend has not issued an ID+badge yet for that user, the first authenticated load triggers issuance and the UI updates to show the new ID+badge without requiring a page refresh.",
+        "If the ID+badge fetch fails, the rest of the app remains usable (no hard crash); the UI shows a non-blocking error or fallback state.",
+        "User-facing text is in English."
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Add navigation and content that links the app to the external Web2 website (www.dmc-technologies.fr) so users can learn more about the project and its objective: creating an ICP real-world network.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "I need link the app with my web 2 website to give more information aboute be : www.dmc-technologies.fr",
+          "The website have to explain the objectif : create an ICP real world network."
+        ]
+      },
+      "acceptanceCriteria": [
+        "The app includes a clearly labeled external link to https://www.dmc-technologies.fr (e.g., in header and/or footer) that opens in a new tab with rel=\"noopener noreferrer\".",
+        "The landing page includes brief English copy explaining the objective (creating an ICP real-world network) and references the external website for more details.",
+        "No attempt is made to embed or scrape the external website; it is linked as an external URL only."
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Create an Events (or Coming Soon) page that explains the next step is coming soon after the first step (creating an ID), and add it to the app navigation.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "after that I need a page event which will explain that soon the next step of web 3 is coming"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A new route/page exists (e.g., /events) reachable from the header navigation on desktop and mobile.",
+        "The Events/Coming Soon page contains English copy that clearly states: Step 1 is creating an ID; the next step of the Web3/ICP network is coming soon.",
+        "The page includes a link to https://www.dmc-technologies.fr for additional information.",
+        "Routing works with the existing TanStack Router setup and does not break existing routes (/ , /register, /directory)."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Only create backend/migration.mo if an upgrade-safe state migration is actually required by the implementation.",
+    "Do not modify files under frontend/src/components/ui (compose existing UI components instead).",
+    "Do not edit frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, or frontend/src/main.tsx (these are immutable).",
+    "Use English for any user-facing text."
+  ],
+  "nonGoals": [
+    "Building a full two-way integration with www.dmc-technologies.fr (no API sync, embedding, scraping, or SSO with the Web2 site).",
+    "Adding third-party authentication beyond Internet Identity.",
+    "Implementing real-time features (e.g., chat, websockets, notifications)."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

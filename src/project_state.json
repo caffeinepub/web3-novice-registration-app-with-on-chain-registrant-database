@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Build a beginner-friendly ICP/Web3 onboarding web app that creates a user ID and badge on first login, maintains a registrant database, and links to an external Web2 site describing the ICP real-world network initiative (with an events/coming-soon page for next steps).",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-implement-internet-identity-authentication-so-users-can-sign-in-out-and-the-app-can-associate-a-registrant-record-with-the-signed-in-principal",
+      "title": "Implement Internet Identity authentication so users can sign in/out and the app can associate a registrant record with the signed-in principal.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-registration-form-ui-for-web3-novices-that-collects-and-edits-a-registrant-profile-and-saves-it-to-the-backend",
+      "title": "Build a registration form UI for Web3 novices that collects and edits a registrant profile and saves it to the backend.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-public-read-only-directory-page-that-displays-the-registrant-database-entries-with-search-and-filtering-suitable-for-browsing-novices",
+      "title": "Add a public (read-only) directory page that displays the registrant database entries with search and filtering suitable for browsing novices.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-admin-style-management-capability-limited-to-a-configurable-allowlist-of-principals-to-moderate-the-registrant-database-e-g-remove-entries-that-are-spam",
+      "title": "Add an admin-style management capability limited to a configurable allowlist of principals to moderate the registrant database (e.g., remove entries that are spam).",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-coherent-creative-visual-theme-across-the-app-layout-typography-spacing-and-colors-appropriate-for-a-beginner-friendly-web3-onboarding-directory-avoid-blue-purple-as-the-primary-palette",
+      "title": "Apply a coherent, creative visual theme across the app (layout, typography, spacing, and colors) appropriate for a beginner-friendly Web3 onboarding directory; avoid blue/purple as the primary palette.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-generated-static-image-assets-and-render-them-in-the-ui-store-under-frontend-public-assets-generated-for-branding-and-the-landing-page-hero",
+      "title": "Add generated static image assets and render them in the UI (store under frontend/public/assets/generated) for branding and the landing page hero.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-to-display-a-user-s-progression-current-level-and-or-xp-in-an-appropriate-place-e-g-on-the-registration-profile-area-and-or-in-the-directory-cards-using-the-new-backend-apis-while-keeping-the-ui-optional-and-non-blocking-if-progression-is-not-configured-yet",
+      "title": "Update the frontend to display a user’s progression (current level and/or XP) in an appropriate place (e.g., on the registration/profile area and/or in the directory cards) using the new backend APIs, while keeping the UI optional and non-blocking if progression is not configured yet.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-to-fetch-and-display-the-user-s-issued-id-and-badge-when-they-are-authenticated-including-immediately-after-first-login-without-blocking-the-existing-profile-setup-registration-flow",
+      "title": "Update the frontend to fetch and display the user’s issued ID and badge when they are authenticated, including immediately after first login, without blocking the existing profile setup/registration flow.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-navigation-and-content-that-links-the-app-to-the-external-web2-website-www-dmc-technologies-fr-so-users-can-learn-more-about-the-project-and-its-objective-creating-an-icp-real-world-network",
+      "title": "Add navigation and content that links the app to the external Web2 website (www.dmc-technologies.fr) so users can learn more about the project and its objective: creating an ICP real-world network.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-events-or-coming-soon-page-that-explains-the-next-step-is-coming-soon-after-the-first-step-creating-an-id-and-add-it-to-the-app-navigation",
+      "title": "Create an Events (or Coming Soon) page that explains the next step is coming soon after the first step (creating an ID), and add it to the app navigation.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create an app to register Web3 novices and build/maintain a Web3 database of registrants.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Create a registrant data model and persistent storage in the Motoko backend to serve as the 'Web3 database' of novices.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add an optional user progression system (e.g., levels/experience) to create new kinds of user experience later.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Extend the Motoko backend data model to support an optional user progression system (experience points and derived level) that can be used to create new “level-based” experiences later, without changing existing registration and directory features.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Add backend methods that allow creating and updating level definitions (e.g., level name + required XP threshold) so new levels can be added later without redeploying the frontend.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Create a unique user ID and issue/display a badge automatically when a user logs in for the first time.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Add navigation/links and messaging that connect the app to the external Web2 site (www.dmc-technologies.fr) to explain the project objective (creating an ICP real-world network).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add an Events (or Coming Soon) page describing that the next step of the Web3/ICP network is coming soon.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Add backend support to automatically issue and persist a unique user ID and a badge for each principal the first time they authenticate (first login), and provide APIs to read this information on subsequent logins.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Web3 Novice Registration App with On-Chain Registrant Database",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

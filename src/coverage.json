@@ -1,0 +1,88 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-06T11:09:35.045Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 4,
+    "implemented": 3,
+    "items": [
+      {
+        "id": "REQ-11",
+        "summary": "Add backend support to automatically issue and persist a unique user ID and a badge for each principal the first time they authenticate (first login), and provide APIs to read this information on subsequent logins.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-12",
+        "summary": "Update the frontend to fetch and display the user’s issued ID and badge when they are authenticated, including immediately after first login, without blocking the existing profile setup/registration flow.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useUserBadge.ts",
+          "frontend/src/components/AppLayout.tsx",
+          "frontend/src/pages/RegistrationPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useUserBadge.ts",
+          "frontend/src/components/AppLayout.tsx",
+          "frontend/src/pages/RegistrationPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-13",
+        "summary": "Add navigation and content that links the app to the external Web2 website (www.dmc-technologies.fr) so users can learn more about the project and its objective: creating an ICP real-world network.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AppLayout.tsx",
+          "frontend/src/pages/LandingPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AppLayout.tsx",
+          "frontend/src/pages/LandingPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-14",
+        "summary": "Create an Events (or Coming Soon) page that explains the next step is coming soon after the first step (creating an ID), and add it to the app navigation.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/EventsPage.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/components/AppLayout.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/EventsPage.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/components/AppLayout.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "build-request.json",
+    "build-template/README.md",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/AppLayout.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useUserBadge.ts",
+    "frontend/src/pages/EventsPage.tsx",
+    "frontend/src/pages/LandingPage.tsx",
+    "frontend/src/pages/RegistrationPage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup for landing, registration, directory, and events pages, wrapped with ThemeProvider and profile setup modal.",
+  "frontend/src/components/AppLayout.tsx": "Reusable layout component with responsive header navigation (including Events and Learn More links), mobile menu, user badge display for authenticated users, authentication controls, and footer with caffeine.ai and DMC Technologies attribution.",
+  "frontend/src/components/AuthControls.tsx": "Authentication button component that handles Internet Identity login/logout with loading states and query cache clearing.",
+  "frontend/src/components/ProfileSetupModal.tsx": "Modal dialog that prompts authenticated users without a profile to enter their display name on first login.",
+  "frontend/src/hooks/useCurrentUser.ts": "Custom hooks for fetching current user profile, role, and admin status with proper loading states to prevent modal flash.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including user profiles, registrant CRUD operations, search, and admin moderation.",
+  "frontend/src/pages/LandingPage.tsx": "Public landing page with hero section explaining the ICP real-world network objective, external link to DMC Technologies website, feature cards highlighting unique ID creation, and call-to-action sections.",
+  "frontend/src/pages/RegistrationPage.tsx": "Registration form page with user badge display at the top, validation for name/email/skill level/interests/bio, and support for both new registration and profile updates.",
+  "frontend/src/pages/DirectoryPage.tsx": "Public directory page displaying all registrants with search by name, skill level filtering, and admin-only delete functionality.",
+  "frontend/src/index.css": "Global styles with warm amber/peach OKLCH color palette for light and dark modes, avoiding blue/purple tones.",
+  "frontend/tailwind.config.js": "Tailwind configuration with Inter font family and extended color tokens matching the warm design system.",
+  "frontend/src/pages/EventsPage.tsx": "Events/Coming Soon page explaining that Step 1 (creating an ID) is complete and the next step of the Web3/ICP network is coming soon, with external link to DMC Technologies website.",
+  "frontend/src/hooks/useUserBadge.ts": "React Query hook for fetching or creating the authenticated user's badge from the backend with graceful error handling and caching."
+}

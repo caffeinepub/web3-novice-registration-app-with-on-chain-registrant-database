@@ -1,110 +1,97 @@
 {
   "kind": "build_request",
-  "title": "Auto-create user ID + badge on first login; add external site link and Events/Coming Soon page",
+  "title": "Add a 3D “Digital World” planet page that visualizes total app signups as inhabitants",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-11",
-      "text": "Add backend support to automatically issue and persist a unique user ID and a badge for each principal the first time they authenticate (first login), and provide APIs to read this information on subsequent logins.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "i want and app who create ID and badge when user login for the first time on it !"
-        ]
-      },
-      "acceptanceCriteria": [
-        "When an authenticated principal calls the new/read API for their ID+badge and no record exists yet, the backend creates one automatically and returns it in the same call.",
-        "On later calls by the same principal, the backend returns the exact same user ID and badge as previously issued (no regeneration).",
-        "The user ID is unique across principals within the canister.",
-        "APIs enforce that a caller can only read their own ID+badge (unless admin access already exists and is explicitly allowed by the implementation).",
-        "Existing registrant CRUD and user profile APIs continue to work without breaking changes."
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "text": "Update the frontend to fetch and display the user’s issued ID and badge when they are authenticated, including immediately after first login, without blocking the existing profile setup/registration flow.",
+      "id": "REQ-22",
+      "text": "Add a new page that visualizes the community as a digital world: render a 3D planet and show an inhabitant representation for each registrant; also display the total inhabitant count equal to the total number of app signups/registrations.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-user-1"
         ],
         "quotes": [
-          "create ID and badge when user login for the first time"
+          "une page supplémentaire, chaque nouveau membre apparait dans un monde digital, sur une planète où on peut visualiser au fur et à mesure le nombre d'habitant qui représente le nombre d'incrit via notre app"
         ]
       },
       "acceptanceCriteria": [
-        "After a successful Internet Identity sign-in, the app requests the caller’s issued ID+badge from the backend and shows it in an appropriate place (e.g., header/account area and/or registration/profile area).",
-        "If the backend has not issued an ID+badge yet for that user, the first authenticated load triggers issuance and the UI updates to show the new ID+badge without requiring a page refresh.",
-        "If the ID+badge fetch fails, the rest of the app remains usable (no hard crash); the UI shows a non-blocking error or fallback state.",
-        "User-facing text is in English."
+        "A new route exists (e.g., \"/world\") that loads a new page component without breaking existing routes (/ , /register, /directory, /events).",
+        "The page renders a 3D planet scene using React Three Fiber/Three.js and shows N inhabitant markers/particles/models where N equals the current number of registrants returned by the backend.",
+        "The page displays an explicit numeric total (e.g., \"Inhabitants: 123\") that matches the number used for the visualization.",
+        "If the user is not authenticated (and therefore cannot query registrants), the page shows a sign-in prompt and does not crash.",
+        "The page includes a loading state and a non-blocking error state if data fetch fails."
       ]
     },
     {
-      "id": "REQ-13",
-      "text": "Add navigation and content that links the app to the external Web2 website (www.dmc-technologies.fr) so users can learn more about the project and its objective: creating an ICP real-world network.",
-      "target": "frontend",
+      "id": "REQ-23",
+      "text": "Expose a backend query API that returns the total number of registrants (signups) without requiring the frontend to fetch and count the full registrant list, and consume it from the new Digital World page via a new React Query hook.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-user-1"
         ],
         "quotes": [
-          "I need link the app with my web 2 website to give more information aboute be : www.dmc-technologies.fr",
-          "The website have to explain the objectif : create an ICP real world network."
+          "on peut visualiser au fur et à mesure le nombre d'habitant qui représente le nombre d'incrit via notre app"
         ]
       },
       "acceptanceCriteria": [
-        "The app includes a clearly labeled external link to https://www.dmc-technologies.fr (e.g., in header and/or footer) that opens in a new tab with rel=\"noopener noreferrer\".",
-        "The landing page includes brief English copy explaining the objective (creating an ICP real-world network) and references the external website for more details.",
-        "No attempt is made to embed or scrape the external website; it is linked as an external URL only."
+        "Backend: a new query method exists that returns the registrant count as a number type usable from the generated frontend bindings, and it enforces the same authentication policy as listAllRegistrants/searchRegistrants (no public unauthenticated access unless already used elsewhere).",
+        "Frontend: the Digital World page calls the count API and renders the returned number.",
+        "Frontend: the count query is periodically refreshed (polling) so the displayed number can increase over time without a full page reload.",
+        "The count displayed on the page matches the length of listAllRegistrants() for the same authenticated user session."
       ]
     },
     {
-      "id": "REQ-14",
-      "text": "Create an Events (or Coming Soon) page that explains the next step is coming soon after the first step (creating an ID), and add it to the app navigation.",
+      "id": "REQ-24",
+      "text": "Make the visualization feel like “each new member appears”: when the registrant total increases, add new inhabitant visuals with an entry animation; keep placement deterministic and stable across refreshes (so existing inhabitants do not jump).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-user-1"
         ],
         "quotes": [
-          "after that I need a page event which will explain that soon the next step of web 3 is coming"
+          "chaque nouveau membre apparait dans un monde digital, sur une planète"
         ]
       },
       "acceptanceCriteria": [
-        "A new route/page exists (e.g., /events) reachable from the header navigation on desktop and mobile.",
-        "The Events/Coming Soon page contains English copy that clearly states: Step 1 is creating an ID; the next step of the Web3/ICP network is coming soon.",
-        "The page includes a link to https://www.dmc-technologies.fr for additional information.",
-        "Routing works with the existing TanStack Router setup and does not break existing routes (/ , /register, /directory)."
+        "When the count increases between two successful polls, the page adds the difference as new inhabitants and animates them appearing (e.g., scale/opacity rise) without re-randomizing existing inhabitants.",
+        "Inhabitant placement is deterministic (e.g., seeded by index) so the same registrant count produces the same distribution on the planet across reloads.",
+        "The page provides basic performance safeguards (e.g., cap detail levels, use instancing/points, or reduce effects) so it remains usable for larger counts (at least several hundred)."
+      ]
+    },
+    {
+      "id": "REQ-25",
+      "text": "Add navigation access to the new Digital World page from the app header navigation and ensure the mobile menu also includes it.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-1"
+        ],
+        "quotes": [
+          "une page supplémentaire"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Desktop navigation includes a link (English label) to the new page.",
+        "Mobile navigation includes the same link and closes the menu on navigation, consistent with existing links.",
+        "Navigation works with the current TanStack Router setup and does not break existing links."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
-    "Only create backend/migration.mo if an upgrade-safe state migration is actually required by the implementation.",
-    "Do not modify files under frontend/src/components/ui (compose existing UI components instead).",
-    "Do not edit frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, or frontend/src/main.tsx (these are immutable).",
-    "Use English for any user-facing text."
+    "Use English for any user-facing text added for the new page and navigation labels.",
+    "Backend must remain single-actor in backend/main.mo; only add migration.mo if a stable-state upgrade is strictly required (avoid schema changes if possible).",
+    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui; compose existing components instead.",
+    "No real-time sockets/WebSockets; use React Query polling/refresh to update counts over time."
   ],
   "nonGoals": [
-    "Building a full two-way integration with www.dmc-technologies.fr (no API sync, embedding, scraping, or SSO with the Web2 site).",
-    "Adding third-party authentication beyond Internet Identity.",
-    "Implementing real-time features (e.g., chat, websockets, notifications)."
+    "Do not implement multiplayer, real-time avatars, chat, or presence features.",
+    "Do not add third-party analytics or external databases to track signups.",
+    "Do not require new user profile fields solely for the visualization (avoid adding timestamps/geo/etc.)."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

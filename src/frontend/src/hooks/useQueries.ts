@@ -43,6 +43,7 @@ export function useAddRegistrant() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['registrant'] });
       queryClient.invalidateQueries({ queryKey: ['allRegistrants'] });
+      queryClient.invalidateQueries({ queryKey: ['registrantCount'] });
     },
   });
 }
@@ -86,6 +87,23 @@ export function useDeleteRegistrant() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['allRegistrants'] });
       queryClient.invalidateQueries({ queryKey: ['searchRegistrants'] });
+      queryClient.invalidateQueries({ queryKey: ['registrantCount'] });
     },
+  });
+}
+
+export function useGetRegistrantCount() {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<number>({
+    queryKey: ['registrantCount'],
+    queryFn: async () => {
+      if (!actor) return 0;
+      const count = await actor.getTotalNumberOfRegistrants();
+      return Number(count);
+    },
+    enabled: !!actor && !actorFetching,
+    refetchInterval: 5000,
+    retry: false,
   });
 }

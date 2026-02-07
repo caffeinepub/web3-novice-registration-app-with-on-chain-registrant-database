@@ -1,14 +1,12 @@
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 import Map "mo:core/Map";
-import Nat "mo:core/Nat";
 import Text "mo:core/Text";
 import Iter "mo:core/Iter";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-import Migration "migration";
 
-(with migration = Migration.run)
+// Live implementation, already deployed to the IC
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -35,7 +33,6 @@ actor {
   let userProfiles = Map.empty<Principal, UserProfile>();
   let userBadges = Map.empty<Principal, UserBadge>();
 
-  // User Profile Management (required by frontend)
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can access profiles");
@@ -57,17 +54,17 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // Registrant Management
   public shared ({ caller }) func addRegistrant(registrant : Registrant) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only authenticated users can register");
     };
-    // Users can only add their own registrant record
     registrants.add(caller, registrant);
   };
 
   public query ({ caller }) func getRegistrant(principal : Principal) : async ?Registrant {
-    // Public read access - no authorization check needed
+    if (caller != principal and not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Can only view your own registrant data");
+    };
     registrants.get(principal);
   };
 
@@ -82,12 +79,16 @@ actor {
   };
 
   public query ({ caller }) func listAllRegistrants() : async [Registrant] {
-    // Public read access - no authorization check needed
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only authenticated users can list registrants");
+    };
     registrants.values().toArray();
   };
 
   public query ({ caller }) func searchRegistrants(searchTerm : Text) : async [Registrant] {
-    // Public read access - no authorization check needed
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only authenticated users can search registrants");
+    };
     registrants.values().toArray().filter(
       func(registrant) {
         registrant.name.contains(#text searchTerm) or registrant.skillLevel.contains(#text searchTerm);
@@ -95,7 +96,6 @@ actor {
     );
   };
 
-  // User Badge Management
   public shared ({ caller }) func getOrCreateUserBadge() : async UserBadge {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only authenticated users can get badges");
@@ -121,5 +121,13 @@ actor {
       Runtime.trap("Unauthorized: Can only view your own badge");
     };
     userBadges.get(principal);
+  };
+
+  // New API for Digital World to get total number of registrants
+  public query ({ caller }) func getTotalNumberOfRegistrants() : async Nat {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only authenticated users can view registrant count");
+    };
+    registrants.size();
   };
 };

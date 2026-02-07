@@ -118,6 +118,7 @@ export interface backendInterface {
     getCallerUserRole(): Promise<UserRole>;
     getOrCreateUserBadge(): Promise<UserBadge>;
     getRegistrant(principal: Principal): Promise<Registrant | null>;
+    getTotalNumberOfRegistrants(): Promise<bigint>;
     getUserBadge(principal: Principal): Promise<UserBadge | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
@@ -238,6 +239,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getRegistrant(arg0);
             return from_candid_opt_n6(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getTotalNumberOfRegistrants(): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getTotalNumberOfRegistrants();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getTotalNumberOfRegistrants();
+            return result;
         }
     }
     async getUserBadge(arg0: Principal): Promise<UserBadge | null> {

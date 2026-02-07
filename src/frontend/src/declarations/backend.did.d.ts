@@ -35,6 +35,7 @@ export interface _SERVICE {
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getOrCreateUserBadge' : ActorMethod<[], UserBadge>,
   'getRegistrant' : ActorMethod<[Principal], [] | [Registrant]>,
+  'getTotalNumberOfRegistrants' : ActorMethod<[], bigint>,
   'getUserBadge' : ActorMethod<[Principal], [] | [UserBadge]>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,

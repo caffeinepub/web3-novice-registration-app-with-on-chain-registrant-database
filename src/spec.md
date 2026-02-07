@@ -1,13 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Automatically issue a persistent user ID and badge on first authentication, display it in the UI, and add navigation/content for an external informational site plus an Events/Coming Soon page.
+**Goal:** Add a new “Digital World” page that visualizes total app signups as inhabitants on a 3D planet and keeps the count updated over time.
 
 **Planned changes:**
-- Backend: Add upgrade-safe storage and APIs that create-and-return a unique user ID and badge for the authenticated principal on first read, and return the same values on subsequent calls.
-- Backend: Enforce that callers can only read their own issued ID+badge (unless an explicit admin pathway already exists).
-- Frontend: After Internet Identity sign-in, fetch and display the user’s issued ID and badge without blocking the existing registration/profile flow; handle failures with a non-blocking fallback.
-- Frontend: Add a clearly labeled external link to https://www.dmc-technologies.fr (opens in a new tab) and add brief landing-page English copy describing the objective (creating an ICP real-world network).
-- Frontend: Create an /events (Events/Coming Soon) page, add it to header navigation (desktop/mobile), include English copy explaining step 1 (creating an ID) is done and the next step is coming soon, plus a link to https://www.dmc-technologies.fr.
+- Add a new route (e.g., `/world`) and page that renders a 3D planet scene (React Three Fiber/Three.js).
+- Add a backend query API to return the total number of registrants (count-only), enforcing the same authentication policy as existing registrant queries.
+- Add a new React Query hook to fetch the registrant count, poll periodically, and handle loading + non-blocking error states.
+- Render inhabitant visuals equal to the fetched count, show an explicit numeric total (e.g., “Inhabitants: N”), and animate newly added inhabitants when the count increases while keeping placement deterministic and stable across refreshes.
+- Add a header navigation link (desktop + mobile) to the new page, consistent with existing TanStack Router navigation behavior.
 
-**User-visible outcome:** On first login, users are automatically assigned an ID and badge that persist across logins and are shown in the app; users can navigate to an Events/Coming Soon page and follow an external link to learn more about the ICP real-world network objective.
+**User-visible outcome:** Users can navigate to a new “Digital World” page that shows a 3D planet with an inhabitant representation for each signup and a live-updating “Inhabitants” total; unauthenticated users see a sign-in prompt.

@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage';
 import RegistrationPage from './pages/RegistrationPage';
 import DirectoryPage from './pages/DirectoryPage';
 import EventsPage from './pages/EventsPage';
+import WorldPage from './pages/WorldPage';
 import AppLayout from './components/AppLayout';
 import ProfileSetupModal from './components/ProfileSetupModal';
 
@@ -40,7 +41,13 @@ const eventsRoute = createRoute({
   component: EventsPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, registerRoute, directoryRoute, eventsRoute]);
+const worldRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/world',
+  component: WorldPage,
+});
+
+const routeTree = rootRoute.addChildren([indexRoute, registerRoute, directoryRoute, eventsRoute, worldRoute]);
 
 const router = createRouter({ routeTree });
 

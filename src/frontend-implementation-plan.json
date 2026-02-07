@@ -1,80 +1,97 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "User badge display, external website link, and Events/Coming Soon page",
+  "title": "3D Digital World page visualizing total registrants as planet inhabitants",
   "requirements": [
     {
-      "id": "REQ-12",
-      "summary": "Fetch and display the authenticated user’s issued unique ID and badge (including first-login issuance) without blocking existing registration/profile flows.",
+      "id": "REQ-22",
+      "summary": "Add a new /world page that renders a 3D planet and visualizes one inhabitant per registrant, showing the total count from the backend with auth-aware, loading, and error states.",
       "acceptanceCriteria": [
-        "After a successful Internet Identity sign-in, the app requests the caller’s issued ID+badge from the backend and shows it in an appropriate place (e.g., header/account area and/or registration/profile area).",
-        "If the backend has not issued an ID+badge yet for that user, the first authenticated load triggers issuance and the UI updates to show the new ID+badge without requiring a page refresh.",
-        "If the ID+badge fetch fails, the rest of the app remains usable (no hard crash); the UI shows a non-blocking error or fallback state.",
-        "User-facing text is in English."
+        "A new route exists (e.g., \"/world\") that loads a new page component without breaking existing routes (/ , /register, /directory, /events).",
+        "The page renders a 3D planet scene using React Three Fiber/Three.js and shows N inhabitant markers/particles/models where N equals the current number of registrants returned by the backend.",
+        "The page displays an explicit numeric total (e.g., \"Inhabitants: 123\") that matches the number used for the visualization.",
+        "If the user is not authenticated (and therefore cannot query registrants), the page shows a sign-in prompt and does not crash.",
+        "The page includes a loading state and a non-blocking error state if data fetch fails."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useUserBadge.ts",
+          "path": "frontend/src/pages/WorldPage.tsx",
           "operation": "create",
-          "description": "Create React Query hook(s) to call the backend capability getOrCreateUserBadge() when the user is authenticated, returning loading/error/data states and avoiding hard failures; leverage existing Internet Identity state from the app. (Use the authorization component guidance for authenticated UX patterns and graceful trap/error handling; Verify the component's usage instructions before implementing.)"
+          "description": "Create the Digital World page UI (English-only text) that: checks authentication using existing auth hooks (authorization component capability), shows a sign-in prompt when unauthenticated (reuse AuthControls), and when authenticated renders the 3D scene plus an explicit \"Inhabitants: <N>\" total with loading and non-blocking error states. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/AppLayout.tsx",
-          "operation": "modify",
-          "description": "Add a small authenticated-only account area in the header (and optionally mobile menu) that displays the issued unique ID and badge using the new useUserBadge hook, with a non-blocking fallback/error state so navigation and other features still work. (Use the authorization component guidance for login-dependent data display and clearing cached data on logout; Verify the component's usage instructions before implementing.)"
-        },
-        {
-          "path": "frontend/src/pages/RegistrationPage.tsx",
-          "operation": "modify",
-          "description": "Display the authenticated user’s issued ID+badge near the top of the registration flow (read-only) using the new useUserBadge hook, ensuring the existing registration form remains usable even if the badge fetch fails. (Use the authorization component guidance for authenticated data fetching patterns; Verify the component's usage instructions before implementing.)"
-        }
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "summary": "Add a clearly labeled external link to the Web2 website and brief landing-page copy explaining the project objective (ICP real-world network).",
-      "acceptanceCriteria": [
-        "The app includes a clearly labeled external link to https://www.dmc-technologies.fr (e.g., in header and/or footer) that opens in a new tab with rel=\"noopener noreferrer\".",
-        "The landing page includes brief English copy explaining the objective (creating an ICP real-world network) and references the external website for more details.",
-        "No attempt is made to embed or scrape the external website; it is linked as an external URL only."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/AppLayout.tsx",
-          "operation": "modify",
-          "description": "Add a clearly labeled external link to https://www.dmc-technologies.fr in the header navigation and/or footer, opening in a new tab with rel=\"noopener noreferrer\" (external URL only; no embedding)."
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Update landing-page content to include brief English copy stating the objective is creating an ICP real-world network and referencing https://www.dmc-technologies.fr for more details (link only; do not embed/scrape)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "summary": "Create an Events/Coming Soon page and add it to navigation with working TanStack Router routing.",
-      "acceptanceCriteria": [
-        "A new route/page exists (e.g., /events) reachable from the header navigation on desktop and mobile.",
-        "The Events/Coming Soon page contains English copy that clearly states: Step 1 is creating an ID; the next step of the Web3/ICP network is coming soon.",
-        "The page includes a link to https://www.dmc-technologies.fr for additional information.",
-        "Routing works with the existing TanStack Router setup and does not break existing routes (/ , /register, /directory)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/EventsPage.tsx",
+          "path": "frontend/src/components/world/PlanetWorldScene.tsx",
           "operation": "create",
-          "description": "Create an Events (Coming Soon) page with English copy explaining that Step 1 is creating an ID and the next step of the Web3/ICP network is coming soon, and include an external link to https://www.dmc-technologies.fr (open new tab, rel=\"noopener noreferrer\")."
+          "description": "Implement the 3D planet visualization using React Three Fiber/Three.js: render a planet plus inhabitant visuals driven by a numeric count prop, designed to support several hundred inhabitants without locking the UI (e.g., instancing/points and capped effects)."
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Register a new TanStack Router route for the Events page (e.g., /events) and include it in the route tree alongside existing routes, ensuring existing routes continue to work."
+          "description": "Register the new TanStack Router route at \"/world\" and wire it to the new WorldPage component without impacting existing routes."
+        }
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "summary": "Consume the backend registrant-count capability from the Digital World page via a new React Query hook with polling refresh.",
+      "acceptanceCriteria": [
+        "Backend: a new query method exists that returns the registrant count as a number type usable from the generated frontend bindings, and it enforces the same authentication policy as listAllRegistrants/searchRegistrants (no public unauthenticated access unless already used elsewhere).",
+        "Frontend: the Digital World page calls the count API and renders the returned number.",
+        "Frontend: the count query is periodically refreshed (polling) so the displayed number can increase over time without a full page reload.",
+        "The count displayed on the page matches the length of listAllRegistrants() for the same authenticated user session."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add a new React Query hook to fetch the total registrant count from the existing backend capability (getTotalNumberOfRegistrants), convert bigint to number safely for display, and enable periodic polling/refresh per constraints (no sockets)."
         },
+        {
+          "path": "frontend/src/pages/WorldPage.tsx",
+          "operation": "modify",
+          "description": "Use the new count hook to drive both the explicit total display and the 3D inhabitant count; handle authorization failures gracefully (authorization component capability) by showing a sign-in prompt instead of crashing. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "summary": "Make inhabitant placement deterministic and animate only newly added inhabitants when the count increases between polls, with performance safeguards.",
+      "acceptanceCriteria": [
+        "When the count increases between two successful polls, the page adds the difference as new inhabitants and animates them appearing (e.g., scale/opacity rise) without re-randomizing existing inhabitants.",
+        "Inhabitant placement is deterministic (e.g., seeded by index) so the same registrant count produces the same distribution on the planet across reloads.",
+        "The page provides basic performance safeguards (e.g., cap detail levels, use instancing/points, or reduce effects) so it remains usable for larger counts (at least several hundred)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/utils/worldPlacement.ts",
+          "operation": "create",
+          "description": "Add deterministic placement helpers (e.g., seeded-by-index random function and sphere-distribution function) to ensure stable inhabitant positions across reloads for the same count."
+        },
+        {
+          "path": "frontend/src/components/world/PlanetWorldScene.tsx",
+          "operation": "modify",
+          "description": "Update the 3D scene to: (1) compute stable inhabitant transforms from deterministic placement utilities, (2) detect count increases and animate only the newly added indices with an entry animation, and (3) include performance safeguards such as instanced rendering/points and capped visual complexity."
+        },
+        {
+          "path": "frontend/src/pages/WorldPage.tsx",
+          "operation": "modify",
+          "description": "Track prior successful counts across polls to provide the scene the information needed to animate new inhabitants only (difference since last poll) while keeping existing inhabitants stable."
+        }
+      ]
+    },
+    {
+      "id": "REQ-25",
+      "summary": "Add header and mobile navigation links to the new Digital World page and ensure mobile menu behavior matches existing links.",
+      "acceptanceCriteria": [
+        "Desktop navigation includes a link (English label) to the new page.",
+        "Mobile navigation includes the same link and closes the menu on navigation, consistent with existing links.",
+        "Navigation works with the current TanStack Router setup and does not break existing links."
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/components/AppLayout.tsx",
           "operation": "modify",
-          "description": "Wire the Events page into app navigation for both desktop header nav and mobile menu so the /events route is reachable, without disrupting existing links to /, /register, and /directory."
+          "description": "Add a new navigation Link to \"/world\" with an English label (e.g., \"World\") in both the desktop header nav and the mobile menu; ensure the mobile menu closes on navigation consistent with existing links."
         }
       ]
     }

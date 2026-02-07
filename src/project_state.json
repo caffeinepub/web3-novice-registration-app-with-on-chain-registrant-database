@@ -1,9 +1,14 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
+  "projectStateVersion": 19,
   "summary": "Build a beginner-friendly ICP/Web3 onboarding web app that creates a user ID and badge on first login, maintains a registrant database, and links to an external Web2 site describing the ICP real-world network initiative (with an events/coming-soon page for next steps).",
-  "architectural_notes": [],
-  "known_issues": [],
+  "architectural_notes": [
+    "Plan a new 'Planet/Digital World' visualization page that reflects registrant count in real time and adds a new visible 'inhabitant' representation for each new registrant."
+  ],
+  "known_issues": [
+    "Deployment/publish-to-live step failed previously (“publish step hit a snag” / build error); user requested retry.",
+    "Live frontend URL https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io returns “Canister ID Not Resolved” (gateway can’t resolve destination canister), suggesting deployment did not actually succeed or canister/domain mapping is missing."
+  ],
   "isFixRequest": false,
   "existing_features": [
     {
@@ -85,6 +90,94 @@
         "REQ-14"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-deploy-the-current-application-to-the-internet-computer-live-environment-and-provide-the-resulting-public-access-address-url-for-the-frontend-along-with-the-deployed-canister-ids-frontend-backend-needed-to-reference-the-deployment",
+      "title": "Deploy the current application to the Internet Computer (live environment) and provide the resulting public access address (URL) for the frontend, along with the deployed canister IDs (frontend + backend) needed to reference the deployment.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-diagnose-and-fix-the-issue-that-prevents-the-app-from-being-published-deployed-to-the-internet-computer-mainnet-the-previous-publish-step-hit-a-snag-failure-so-that-a-dfx-deploy-network-ic-completes-successfully-for-both-backend-and-frontend-canisters",
+      "title": "Diagnose and fix the issue that prevents the app from being published/deployed to the Internet Computer mainnet (the previous \"publish step hit a snag\" failure), so that a `dfx deploy --network ic` completes successfully for both backend and frontend canisters.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-deploy-the-current-application-to-the-internet-computer-mainnet-and-provide-the-resulting-public-frontend-url-and-both-canister-ids-frontend-backend",
+      "title": "Deploy the current application to the Internet Computer (mainnet) and provide the resulting public frontend URL and both canister IDs (frontend + backend).",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-re-run-the-internet-computer-deployment-so-the-frontend-url-is-reachable-and-provide-the-resulting-working-public-frontend-url-plus-both-canister-ids-frontend-backend",
+      "title": "Re-run the Internet Computer deployment so the frontend URL is reachable and provide the resulting working public frontend URL plus both canister IDs (frontend + backend).",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-diagnose-and-fix-the-root-cause-of-the-gateway-error-canister-id-not-resolved-when-opening-https-5cpxd-piaaa-aaaap-qib3q-cai-icp0-io-ensuring-the-deployed-frontend-canister-domain-mapping-is-correct-after-redeploy",
+      "title": "Diagnose and fix the root cause of the gateway error “Canister ID Not Resolved” when opening `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`, ensuring the deployed frontend canister/domain mapping is correct after redeploy.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-deploy-the-current-draft-version-6-build-to-the-internet-computer-ic-network-and-provide-the-resulting-public-frontend-url-plus-both-deployed-canister-ids-frontend-and-backend",
+      "title": "Deploy the current Draft Version 6 build to the Internet Computer (IC) network and provide the resulting public frontend URL plus both deployed canister IDs (frontend and backend).",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-after-deployment-verify-that-the-deployed-frontend-is-correctly-mapped-to-the-deployed-frontend-canister-id-no-domain-canister-mismatch-and-document-any-remediation-steps-taken-if-a-mismatch-is-detected",
+      "title": "After deployment, verify that the deployed frontend is correctly mapped to the deployed frontend canister ID (no domain/canister mismatch) and document any remediation steps taken if a mismatch is detected.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-page-that-visualizes-the-community-as-a-digital-world-render-a-3d-planet-and-show-an-inhabitant-representation-for-each-registrant-also-display-the-total-inhabitant-count-equal-to-the-total-number-of-app-signups-registrations",
+      "title": "Add a new page that visualizes the community as a digital world: render a 3D planet and show an inhabitant representation for each registrant; also display the total inhabitant count equal to the total number of app signups/registrations.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-expose-a-backend-query-api-that-returns-the-total-number-of-registrants-signups-without-requiring-the-frontend-to-fetch-and-count-the-full-registrant-list-and-consume-it-from-the-new-digital-world-page-via-a-new-react-query-hook",
+      "title": "Expose a backend query API that returns the total number of registrants (signups) without requiring the frontend to fetch and count the full registrant list, and consume it from the new Digital World page via a new React Query hook.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-make-the-visualization-feel-like-each-new-member-appears-when-the-registrant-total-increases-add-new-inhabitant-visuals-with-an-entry-animation-keep-placement-deterministic-and-stable-across-refreshes-so-existing-inhabitants-do-not-jump",
+      "title": "Make the visualization feel like “each new member appears”: when the registrant total increases, add new inhabitant visuals with an entry animation; keep placement deterministic and stable across refreshes (so existing inhabitants do not jump).",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-navigation-access-to-the-new-digital-world-page-from-the-app-header-navigation-and-ensure-the-mobile-menu-also-includes-it",
+      "title": "Add navigation access to the new Digital World page from the app header navigation and ensure the mobile menu also includes it.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -148,6 +241,18 @@
       "reqIds": [
         "REQ-11"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Deploy the app live (to ICP) and provide the resulting canister/frontend address (URL) to access it.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add a new visualization page showing a digital world/planet where each new registrant appears as an inhabitant, and the planet displays the growing inhabitant count equal to total app signups.",
+      "reqIds": [],
       "status": "pending"
     }
   ],

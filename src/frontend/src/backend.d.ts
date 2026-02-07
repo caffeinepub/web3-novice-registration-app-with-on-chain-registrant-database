@@ -35,6 +35,7 @@ export interface backendInterface {
     getCallerUserRole(): Promise<UserRole>;
     getOrCreateUserBadge(): Promise<UserBadge>;
     getRegistrant(principal: Principal): Promise<Registrant | null>;
+    getTotalNumberOfRegistrants(): Promise<bigint>;
     getUserBadge(principal: Principal): Promise<UserBadge | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;

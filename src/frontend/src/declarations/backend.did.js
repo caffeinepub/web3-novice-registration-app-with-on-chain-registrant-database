@@ -36,6 +36,7 @@ export const idlService = IDL.Service({
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getOrCreateUserBadge' : IDL.Func([], [UserBadge], []),
   'getRegistrant' : IDL.Func([IDL.Principal], [IDL.Opt(Registrant)], ['query']),
+  'getTotalNumberOfRegistrants' : IDL.Func([], [IDL.Nat], ['query']),
   'getUserBadge' : IDL.Func([IDL.Principal], [IDL.Opt(UserBadge)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
@@ -83,6 +84,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Opt(Registrant)],
         ['query'],
       ),
+    'getTotalNumberOfRegistrants' : IDL.Func([], [IDL.Nat], ['query']),
     'getUserBadge' : IDL.Func([IDL.Principal], [IDL.Opt(UserBadge)], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],

@@ -1,62 +1,66 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T11:09:35.045Z",
+  "generatedAt": "2026-02-07T23:46:37.341Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 4,
-    "implemented": 3,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-11",
-        "summary": "Add backend support to automatically issue and persist a unique user ID and a badge for each principal the first time they authenticate (first login), and provide APIs to read this information on subsequent logins.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-12",
-        "summary": "Update the frontend to fetch and display the user’s issued ID and badge when they are authenticated, including immediately after first login, without blocking the existing profile setup/registration flow.",
+        "id": "REQ-22",
+        "summary": "Add a new page that visualizes the community as a digital world: render a 3D planet and show an inhabitant representation for each registrant; also display the total inhabitant count equal to the total number of app signups/registrations.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useUserBadge.ts",
-          "frontend/src/components/AppLayout.tsx",
-          "frontend/src/pages/RegistrationPage.tsx"
+          "frontend/src/pages/WorldPage.tsx",
+          "frontend/src/components/world/PlanetWorldScene.tsx",
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useUserBadge.ts",
-          "frontend/src/components/AppLayout.tsx",
-          "frontend/src/pages/RegistrationPage.tsx"
+          "frontend/src/pages/WorldPage.tsx",
+          "frontend/src/components/world/PlanetWorldScene.tsx",
+          "frontend/src/App.tsx"
         ]
       },
       {
-        "id": "REQ-13",
-        "summary": "Add navigation and content that links the app to the external Web2 website (www.dmc-technologies.fr) so users can learn more about the project and its objective: creating an ICP real-world network.",
+        "id": "REQ-23",
+        "summary": "Expose a backend query API that returns the total number of registrants (signups) without requiring the frontend to fetch and count the full registrant list, and consume it from the new Digital World page via a new React Query hook.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/AppLayout.tsx",
-          "frontend/src/pages/LandingPage.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/WorldPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/AppLayout.tsx",
-          "frontend/src/pages/LandingPage.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/WorldPage.tsx"
         ]
       },
       {
-        "id": "REQ-14",
-        "summary": "Create an Events (or Coming Soon) page that explains the next step is coming soon after the first step (creating an ID), and add it to the app navigation.",
+        "id": "REQ-24",
+        "summary": "Make the visualization feel like “each new member appears”: when the registrant total increases, add new inhabitant visuals with an entry animation; keep placement deterministic and stable across refreshes (so existing inhabitants do not jump).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/EventsPage.tsx",
-          "frontend/src/App.tsx",
+          "frontend/src/utils/worldPlacement.ts",
+          "frontend/src/components/world/PlanetWorldScene.tsx",
+          "frontend/src/pages/WorldPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/worldPlacement.ts",
+          "frontend/src/components/world/PlanetWorldScene.tsx",
+          "frontend/src/pages/WorldPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-25",
+        "summary": "Add navigation access to the new Digital World page from the app header navigation and ensure the mobile menu also includes it.",
+        "status": "implemented",
+        "plannedFiles": [
           "frontend/src/components/AppLayout.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/EventsPage.tsx",
-          "frontend/src/App.tsx",
           "frontend/src/components/AppLayout.tsx"
         ]
       }
@@ -64,9 +68,8 @@
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
-    "build-template/README.md",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
@@ -74,12 +77,12 @@
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
     "frontend/src/components/AppLayout.tsx",
+    "frontend/src/components/world/PlanetWorldScene.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useUserBadge.ts",
-    "frontend/src/pages/EventsPage.tsx",
-    "frontend/src/pages/LandingPage.tsx",
-    "frontend/src/pages/RegistrationPage.tsx",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/WorldPage.tsx",
+    "frontend/src/utils/worldPlacement.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

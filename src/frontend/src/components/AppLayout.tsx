@@ -1,21 +1,52 @@
 import { Outlet, Link, useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
-import { Menu, X, IdCard } from 'lucide-react';
+import { Menu, X, IdCard, AlertTriangle, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
 import AuthControls from './AuthControls';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { useGetUserBadge } from '../hooks/useUserBadge';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import DeploymentInfo from './DeploymentInfo';
+import { getDeploymentInfo } from '../utils/deploymentInfo';
 
 export default function AppLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useCurrentUser();
   const { data: userBadge, isLoading: badgeLoading, isError: badgeError } = useGetUserBadge();
+  const deploymentInfo = getDeploymentInfo();
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      {/* Global mismatch warning banner */}
+      {deploymentInfo.hasMismatch && deploymentInfo.correctPublicUrl && (
+        <div className="bg-destructive/10 border-b border-destructive/20">
+          <div className="container py-2 px-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-destructive font-medium">
+                  Canister ID Mismatch Detected
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  You're viewing the wrong URL. Click below to open the correct deployment URL.
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 text-xs shrink-0"
+                onClick={() => window.open(deploymentInfo.correctPublicUrl!, '_blank')}
+              >
+                <ExternalLink className="h-3 w-3 mr-1" />
+                Open Correct URL
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-8">
@@ -46,6 +77,12 @@ export default function AppLayout() {
                 className="text-sm font-medium transition-colors hover:text-primary"
               >
                 Register
+              </Link>
+              <Link 
+                to="/world" 
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
+                World
               </Link>
               <Link 
                 to="/events" 
@@ -138,6 +175,13 @@ export default function AppLayout() {
                 Register
               </Link>
               <Link 
+                to="/world" 
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                World
+              </Link>
+              <Link 
                 to="/events" 
                 className="text-sm font-medium transition-colors hover:text-primary"
                 onClick={() => setMobileMenuOpen(false)}
@@ -168,17 +212,20 @@ export default function AppLayout() {
       <footer className="border-t border-border/40 bg-muted/30">
         <div className="container py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground text-center md:text-left">
-              © 2026. Built with ❤️ using{' '}
-              <a 
-                href="https://caffeine.ai" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="font-medium hover:text-primary transition-colors"
-              >
-                caffeine.ai
-              </a>
-            </p>
+            <div className="flex flex-col md:flex-row items-center gap-4">
+              <p className="text-sm text-muted-foreground text-center md:text-left">
+                © 2026. Built with ❤️ using{' '}
+                <a 
+                  href="https://caffeine.ai" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="font-medium hover:text-primary transition-colors"
+                >
+                  caffeine.ai
+                </a>
+              </p>
+              <DeploymentInfo />
+            </div>
             <div className="flex gap-6 text-sm text-muted-foreground">
               <Link to="/directory" className="hover:text-primary transition-colors">
                 Browse Novices

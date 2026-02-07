@@ -1,15 +1,21 @@
 {
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup for landing, registration, directory, and events pages, wrapped with ThemeProvider and profile setup modal.",
-  "frontend/src/components/AppLayout.tsx": "Reusable layout component with responsive header navigation (including Events and Learn More links), mobile menu, user badge display for authenticated users, authentication controls, and footer with caffeine.ai and DMC Technologies attribution.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup for landing, registration, directory, events, and world pages, wrapped with ThemeProvider and profile setup modal.",
+  "frontend/src/components/AppLayout.tsx": "Reusable layout component with responsive header navigation including new World link, mobile menu, user badge display, authentication controls, global canister mismatch warning banner, and footer with caffeine.ai attribution.",
   "frontend/src/components/AuthControls.tsx": "Authentication button component that handles Internet Identity login/logout with loading states and query cache clearing.",
   "frontend/src/components/ProfileSetupModal.tsx": "Modal dialog that prompts authenticated users without a profile to enter their display name on first login.",
   "frontend/src/hooks/useCurrentUser.ts": "Custom hooks for fetching current user profile, role, and admin status with proper loading states to prevent modal flash.",
-  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including user profiles, registrant CRUD operations, search, and admin moderation.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including user profiles, registrant CRUD operations, search, admin moderation, and a new hook for fetching registrant count with 5-second polling and invalidation on mutations.",
   "frontend/src/pages/LandingPage.tsx": "Public landing page with hero section explaining the ICP real-world network objective, external link to DMC Technologies website, feature cards highlighting unique ID creation, and call-to-action sections.",
   "frontend/src/pages/RegistrationPage.tsx": "Registration form page with user badge display at the top, validation for name/email/skill level/interests/bio, and support for both new registration and profile updates.",
   "frontend/src/pages/DirectoryPage.tsx": "Public directory page displaying all registrants with search by name, skill level filtering, and admin-only delete functionality.",
   "frontend/src/index.css": "Global styles with warm amber/peach OKLCH color palette for light and dark modes, avoiding blue/purple tones.",
   "frontend/tailwind.config.js": "Tailwind configuration with Inter font family and extended color tokens matching the warm design system.",
   "frontend/src/pages/EventsPage.tsx": "Events/Coming Soon page explaining that Step 1 (creating an ID) is complete and the next step of the Web3/ICP network is coming soon, with external link to DMC Technologies website.",
-  "frontend/src/hooks/useUserBadge.ts": "React Query hook for fetching or creating the authenticated user's badge from the backend with graceful error handling and caching."
+  "frontend/src/hooks/useUserBadge.ts": "React Query hook for fetching or creating the authenticated user's badge from the backend with graceful error handling and caching.",
+  "frontend/src/utils/deploymentInfo.ts": "Utility functions for reading deployment identifiers with enhanced runtime inference, mismatch detection, and remediation metadata including correct public URL computation and user-friendly remediation messages.",
+  "frontend/src/components/DeploymentInfo.tsx": "Enhanced popover component displaying comprehensive deployment diagnostics with prominent remediation section for canister ID mismatches, including one-click navigation to correct URL and improved copy-to-clipboard functionality.",
+  "frontend/DEPLOYMENT.md": "Comprehensive deployment guide with tightened mainnet deployment checklist emphasizing exact canister ID capture, enhanced troubleshooting section for \"Canister ID Not Resolved\" errors and mismatch warnings, detailed remediation procedures, and step-by-step instructions for using Deployment Info as the source of truth.",
+  "frontend/src/utils/worldPlacement.ts": "Utility functions for deterministic placement of inhabitants on a sphere using golden ratio spiral distribution and seeded color generation to ensure stable positions across reloads.",
+  "frontend/src/components/world/PlanetWorldScene.tsx": "3D scene component using React Three Fiber that renders a rotating planet with inhabitants as colored spheres, featuring entry animations for new inhabitants and gentle floating effects, with explicit TypeScript typing for inhabitant data.",
+  "frontend/src/pages/WorldPage.tsx": "Digital World page that displays a 3D planet visualization showing registrant count as inhabitants, with authentication guard, loading states, error handling, and real-time count updates via polling."
 }

@@ -76,7 +76,7 @@ export default function WorldPage() {
                   <Skeleton className="w-32 h-32 rounded-full" />
                 </div>
               ) : (
-                <PlanetWorldScene count={count ?? 0} previousCount={previousCount} />
+                <PlanetWorldScene inhabitantCount={count ?? 0} />
               )}
             </div>
           </CardContent>

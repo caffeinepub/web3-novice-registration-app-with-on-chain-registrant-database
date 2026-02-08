@@ -10,9 +10,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, CheckCircle2, X, AlertCircle, IdCard, Award } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Loader2, CheckCircle2, X, AlertCircle, IdCard, Award, Eye, EyeOff } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Sector } from '../backend';
+import { SECTOR_OPTIONS } from '../utils/sector';
 
 const SKILL_LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
 
@@ -39,6 +42,8 @@ export default function RegistrationPage() {
   const [telegram, setTelegram] = useState('');
   const [website, setWebsite] = useState('');
   const [cryptoAddress, setCryptoAddress] = useState('');
+  const [isPublic, setIsPublic] = useState(false);
+  const [sector, setSector] = useState<Sector>(Sector.aucuneActivite);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -54,6 +59,8 @@ export default function RegistrationPage() {
       setTelegram(existingRegistrant.data.telegram || '');
       setWebsite(existingRegistrant.data.website || '');
       setCryptoAddress(existingRegistrant.data.cryptoAddress || '');
+      setIsPublic(existingRegistrant.data.isPublic);
+      setSector(existingRegistrant.data.sector);
     }
   }, [existingRegistrant.data]);
 
@@ -110,6 +117,8 @@ export default function RegistrationPage() {
         telegram: telegram.trim() || undefined,
         website: website.trim() || undefined,
         cryptoAddress: cryptoAddress.trim() || undefined,
+        isPublic,
+        sector,
       });
       setShowSuccess(true);
       setTimeout(() => {
@@ -281,6 +290,59 @@ export default function RegistrationPage() {
                 placeholder="Tell us about yourself and your Web3 journey..."
                 rows={4}
               />
+            </div>
+
+            {/* Profile Visibility & Sector Section */}
+            <div className="space-y-4 pt-4 border-t">
+              <h3 className="text-lg font-semibold">Profile Visibility & Sector</h3>
+              
+              {/* Profile Visibility */}
+              <div className="flex items-center justify-between space-x-2 p-4 rounded-lg border bg-muted/50">
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-2">
+                    {isPublic ? (
+                      <Eye className="h-4 w-4 text-primary" />
+                    ) : (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <Label htmlFor="isPublic" className="font-medium cursor-pointer">
+                      Public Profile
+                    </Label>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {isPublic 
+                      ? 'Your profile will appear in the public directory by sector'
+                      : 'Your profile will only be visible to authenticated community members'}
+                  </p>
+                </div>
+                <Switch
+                  id="isPublic"
+                  checked={isPublic}
+                  onCheckedChange={setIsPublic}
+                />
+              </div>
+
+              {/* Sector Selection */}
+              <div className="space-y-2">
+                <Label htmlFor="sector">
+                  Activity Sector <span className="text-destructive">*</span>
+                </Label>
+                <Select value={sector} onValueChange={(value) => setSector(value as Sector)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your activity sector" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SECTOR_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-muted-foreground">
+                  Choose the sector that best describes your professional activity
+                </p>
+              </div>
             </div>
 
             {/* Social Media & Contact Section */}

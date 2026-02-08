@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-the-in-app-wallet-entry-point-from-the-application-navigation-desktop-header-nav-and-mobile-menu-so-users-no-longer-see-any-wallet-oisy-wallet-item-and-ensure-there-is-no-remaining-user-facing-wallet-related-ui-text-or-tooltip-in-the-app-navigation",
-      "featureTitle": "Remove the in-app wallet entry point from the application navigation (desktop header nav and mobile menu) so users no longer see any Wallet/OISY Wallet item, and ensure there is no remaining user-facing wallet-related UI text or tooltip in the app navigation.",
+      "featureId": "feature-update-the-game-page-so-a-user-can-remove-only-one-brick-total-per-page-load-session-after-one-brick-has-been-removed-all-remaining-intact-bricks-must-be-disabled-no-further-confirmation-dialog-no-additional-removals",
+      "featureTitle": "Update the Game page so a user can remove only one brick total per page load/session. After one brick has been removed, all remaining intact bricks must be disabled (no further confirmation dialog, no additional removals).",
       "files": [
-        "frontend/src/components/AppLayout.tsx"
+        "frontend/src/pages/GamePage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -16,17 +16,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-34"
+        "REQ-48"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-remove-unused-oisy-wallet-configuration-usage-from-the-frontend-so-the-app-does-not-depend-on-or-reference-the-oisy-wallet-url-environment-variable-vite-oisy-wallet-url-for-any-ui-behavior",
-      "featureTitle": "Remove unused OISY wallet configuration usage from the frontend so the app does not depend on or reference the OISY wallet URL environment variable (VITE_OISY_WALLET_URL) for any UI behavior.",
+      "featureId": "feature-after-the-user-removes-their-single-allowed-brick-display-the-following-exact-text-behind-the-brick-wall-congrats-you-just-got-your-first-real-world-asset-the-text-must-be-visible-in-the-brick-wall-area-behind-under-the-grid-i-e-revealed-by-removal",
+      "featureTitle": "After the user removes their single allowed brick, display the following exact text behind the brick wall: \"Congrats ! You just got your first REAL WORLD ASSET\". The text must be visible in the brick-wall area behind/under the grid (i.e., revealed by removal).",
       "files": [
-        "frontend/src/components/AppLayout.tsx",
-        "frontend/src/components/OisyWalletNavItem.tsx",
-        "frontend/src/utils/oisyWallet.ts"
+        "frontend/src/pages/GamePage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -37,15 +35,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-35"
+        "REQ-49"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-registration-profile-form-ui-to-allow-authenticated-users-to-input-and-save-optional-social-links-facebook-instagram-telegram-website-and-an-optional-crypto-address-as-part-of-their-registrant-profile-without-making-these-fields-required",
-      "featureTitle": "Update the registration/profile form UI to allow authenticated users to input and save optional social links (Facebook, Instagram, Telegram, website) and an optional crypto address as part of their registrant profile, without making these fields required.",
+      "featureId": "feature-remove-the-clue-hint-section-at-the-bottom-of-the-game-page-including-the-clue-image-card-and-its-accompanying-hint-text-and-ensure-there-is-no-remaining-clue-related-ui-on-game",
+      "featureTitle": "Remove the clue/hint section at the bottom of the Game page (including the clue image card and its accompanying hint text), and ensure there is no remaining clue-related UI on /game.",
       "files": [
-        "frontend/src/pages/RegistrationPage.tsx"
+        "frontend/src/pages/GamePage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -56,26 +54,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-37"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-directory-ui-to-display-a-registrant-s-social-links-facebook-instagram-telegram-website-and-crypto-address-when-present-and-hide-each-field-when-it-is-not-provided",
-      "featureTitle": "Update the directory UI to display a registrant’s social links (Facebook, Instagram, Telegram, website) and crypto address when present, and hide each field when it is not provided.",
-      "files": [
-        "frontend/src/pages/DirectoryPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-38"
+        "REQ-50"
       ],
       "confidence": "high"
     }

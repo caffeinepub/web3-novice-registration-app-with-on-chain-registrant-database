@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { UserProfile, Registrant } from '../backend';
+import type { UserProfile, Registrant, PublicRegistrant, Sector } from '../backend';
 import { Principal } from '@dfinity/principal';
 
 export function useSaveUserProfile() {
@@ -44,6 +44,7 @@ export function useAddRegistrant() {
       queryClient.invalidateQueries({ queryKey: ['registrant'] });
       queryClient.invalidateQueries({ queryKey: ['allRegistrants'] });
       queryClient.invalidateQueries({ queryKey: ['registrantCount'] });
+      queryClient.invalidateQueries({ queryKey: ['publicRegistrants'] });
     },
   });
 }
@@ -88,6 +89,7 @@ export function useDeleteRegistrant() {
       queryClient.invalidateQueries({ queryKey: ['allRegistrants'] });
       queryClient.invalidateQueries({ queryKey: ['searchRegistrants'] });
       queryClient.invalidateQueries({ queryKey: ['registrantCount'] });
+      queryClient.invalidateQueries({ queryKey: ['publicRegistrants'] });
     },
   });
 }
@@ -104,6 +106,20 @@ export function useGetRegistrantCount() {
     },
     enabled: !!actor && !actorFetching,
     refetchInterval: 5000,
+    retry: false,
+  });
+}
+
+export function useGetPublicRegistrantsBySector(sector: Sector | null) {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<PublicRegistrant[]>({
+    queryKey: ['publicRegistrants', sector],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getPublicRegistrantsBySector(sector);
+    },
+    enabled: !!actor && !actorFetching,
     retry: false,
   });
 }

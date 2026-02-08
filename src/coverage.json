@@ -1,88 +1,56 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T01:07:32.904Z",
+  "generatedAt": "2026-02-08T01:36:07.696Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 5,
-    "implemented": 4,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
-        "id": "REQ-34",
-        "summary": "Remove the in-app wallet entry point from the application navigation (desktop header nav and mobile menu) so users no longer see any Wallet/OISY Wallet item, and ensure there is no remaining user-facing wallet-related UI text or tooltip in the app navigation.",
+        "id": "REQ-48",
+        "summary": "Update the Game page so a user can remove only one brick total per page load/session. After one brick has been removed, all remaining intact bricks must be disabled (no further confirmation dialog, no additional removals).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/AppLayout.tsx"
+          "frontend/src/pages/GamePage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/AppLayout.tsx"
+          "frontend/src/pages/GamePage.tsx"
         ]
       },
       {
-        "id": "REQ-35",
-        "summary": "Remove unused OISY wallet configuration usage from the frontend so the app does not depend on or reference the OISY wallet URL environment variable (VITE_OISY_WALLET_URL) for any UI behavior.",
+        "id": "REQ-49",
+        "summary": "After the user removes their single allowed brick, display the following exact text behind the brick wall: \"Congrats ! You just got your first REAL WORLD ASSET\". The text must be visible in the brick-wall area behind/under the grid (i.e., revealed by removal).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/OisyWalletNavItem.tsx",
-          "frontend/src/utils/oisyWallet.ts",
-          "frontend/src/components/AppLayout.tsx"
+          "frontend/src/pages/GamePage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/OisyWalletNavItem.tsx",
-          "frontend/src/utils/oisyWallet.ts",
-          "frontend/src/components/AppLayout.tsx"
+          "frontend/src/pages/GamePage.tsx"
         ]
       },
       {
-        "id": "REQ-36",
-        "summary": "Extend the backend registrant data model and APIs to support saving the following optional fields for each registrant: Facebook, Instagram, Telegram, website URL, and a crypto address, and persist these values in the registrant record returned by existing registrant read/list/search APIs.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-37",
-        "summary": "Update the registration/profile form UI to allow authenticated users to input and save optional social links (Facebook, Instagram, Telegram, website) and an optional crypto address as part of their registrant profile, without making these fields required.",
+        "id": "REQ-50",
+        "summary": "Remove the clue/hint section at the bottom of the Game page (including the clue image card and its accompanying hint text), and ensure there is no remaining clue-related UI on /game.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/RegistrationPage.tsx"
+          "frontend/src/pages/GamePage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/RegistrationPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-38",
-        "summary": "Update the directory UI to display a registrant’s social links (Facebook, Instagram, Telegram, website) and crypto address when present, and hide each field when it is not provided.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DirectoryPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DirectoryPage.tsx"
+          "frontend/src/pages/GamePage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/AppLayout.tsx",
-    "frontend/src/components/OisyWalletNavItem.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/pages/DirectoryPage.tsx",
-    "frontend/src/pages/RegistrationPage.tsx",
-    "frontend/src/utils/oisyWallet.ts",
+    "frontend/src/pages/GamePage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

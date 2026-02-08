@@ -10,18 +10,42 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface Registrant {
+export interface PublicRegistrant {
   'id' : string,
   'cryptoAddress' : [] | [string],
   'interests' : Array<string>,
   'instagram' : [] | [string],
   'name' : string,
+  'sector' : Sector,
   'email' : string,
   'website' : [] | [string],
   'facebook' : [] | [string],
   'skillLevel' : string,
   'telegram' : [] | [string],
 }
+export interface Registrant {
+  'id' : string,
+  'cryptoAddress' : [] | [string],
+  'interests' : Array<string>,
+  'instagram' : [] | [string],
+  'name' : string,
+  'sector' : Sector,
+  'email' : string,
+  'website' : [] | [string],
+  'facebook' : [] | [string],
+  'isPublic' : boolean,
+  'skillLevel' : string,
+  'telegram' : [] | [string],
+}
+export type Sector = { 'professionLiberal' : null } |
+  { 'etudiant' : null } |
+  { 'artiste' : null } |
+  { 'aucuneActivite' : null } |
+  { 'sportif' : null } |
+  { 'fonctionnaire' : null } |
+  { 'services' : null } |
+  { 'marchand' : null } |
+  { 'association' : null };
 export interface UserBadge {
   'principal' : Principal,
   'uniqueId' : string,
@@ -39,6 +63,11 @@ export interface _SERVICE {
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getOrCreateUserBadge' : ActorMethod<[], UserBadge>,
+  'getPublicRegistrantsBySector' : ActorMethod<
+    [[] | [Sector]],
+    Array<PublicRegistrant>
+  >,
+  'getPublicRegistrantsCountBySector' : ActorMethod<[[] | [Sector]], bigint>,
   'getRegistrant' : ActorMethod<[Principal], [] | [Registrant]>,
   'getTotalNumberOfRegistrants' : ActorMethod<[], bigint>,
   'getUserBadge' : ActorMethod<[Principal], [] | [UserBadge]>,

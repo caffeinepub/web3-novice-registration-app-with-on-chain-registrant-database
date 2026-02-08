@@ -14,232 +14,172 @@ export default function AppLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useCurrentUser();
-  const { data: userBadge, isLoading: badgeLoading, isError: badgeError } = useGetUserBadge();
+  const { data: userBadge, isLoading: badgeLoading } = useGetUserBadge();
   const deploymentInfo = getDeploymentInfo();
+
+  const navItems = [
+    { label: 'Home', path: '/' },
+    { label: 'Register', path: '/registration' },
+    { label: 'Directory', path: '/directory' },
+    { label: 'Public Profiles', path: '/public-profiles' },
+    { label: 'Events', path: '/events' },
+    { label: 'World', path: '/world' },
+    { label: 'Game', path: '/game' },
+  ];
+
+  const handleNavClick = (path: string) => {
+    navigate({ to: path });
+    setMobileMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Global mismatch warning banner */}
-      {deploymentInfo.hasMismatch && deploymentInfo.correctPublicUrl && (
-        <div className="bg-destructive/10 border-b border-destructive/20">
-          <div className="container py-2 px-4">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-destructive font-medium">
-                  Canister ID Mismatch Detected
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  You're viewing the wrong URL. Click below to open the correct deployment URL.
-                </p>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-7 text-xs shrink-0"
-                onClick={() => window.open(deploymentInfo.correctPublicUrl!, '_blank')}
-              >
-                <ExternalLink className="h-3 w-3 mr-1" />
-                Open Correct URL
-              </Button>
+      {/* Canister Mismatch Warning Banner */}
+      {deploymentInfo.hasMismatch && (
+        <div className="bg-destructive text-destructive-foreground py-2 px-4">
+          <div className="container flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-sm">
+              <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+              <span className="font-medium">
+                Canister ID mismatch detected. Click Deployment Info for details.
+              </span>
             </div>
+            <DeploymentInfo />
           </div>
         </div>
       )}
 
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2">
-              <img 
-                src="/assets/generated/web3-novice-logo.dim_512x512.png" 
-                alt="Web3 Novice" 
-                className="h-10 w-10"
-              />
-              <span className="font-bold text-xl hidden sm:inline-block">Web3 Novice</span>
-            </Link>
-            
-            <nav className="hidden md:flex items-center gap-6">
-              <Link 
-                to="/" 
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Home
-              </Link>
-              <Link 
-                to="/directory" 
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Directory
-              </Link>
-              <Link 
-                to="/register" 
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Register
-              </Link>
-              <Link 
-                to="/world" 
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                World
-              </Link>
-              <Link 
-                to="/events" 
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Events
-              </Link>
-              <a 
-                href="https://www.dmc-technologies.fr" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Learn More
-              </a>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-4">
-            {isAuthenticated && (
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                <IdCard className="h-4 w-4 text-primary" />
-                {badgeLoading ? (
-                  <Skeleton className="h-4 w-24" />
-                ) : badgeError ? (
-                  <span className="text-xs text-muted-foreground">Badge unavailable</span>
-                ) : userBadge ? (
-                  <span className="text-xs font-medium text-primary">
-                    ID: {userBadge.uniqueId}
-                  </span>
-                ) : null}
+      {/* Header */}
+      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <IdCard className="h-6 w-6 text-primary" />
               </div>
-            )}
-            
-            <div className="hidden md:block">
-              <AuthControls />
-            </div>
-            
-            <button
-              className="md:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-        </div>
+              <span className="font-bold text-xl hidden sm:inline">Web3 Novice</span>
+            </Link>
 
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-border/40 bg-background">
-            <nav className="container py-4 flex flex-col gap-4">
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-6">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  activeProps={{ className: 'text-primary' }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Right Side: User Badge + Auth Controls + Deployment Info */}
+            <div className="flex items-center gap-3">
+              {/* User Badge (Desktop) */}
               {isAuthenticated && (
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20">
+                <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
                   <IdCard className="h-4 w-4 text-primary" />
                   {badgeLoading ? (
-                    <Skeleton className="h-4 w-24" />
-                  ) : badgeError ? (
-                    <span className="text-xs text-muted-foreground">Badge unavailable</span>
+                    <Skeleton className="h-4 w-20" />
                   ) : userBadge ? (
-                    <div className="flex flex-col">
-                      <span className="text-xs font-medium text-primary">
-                        ID: {userBadge.uniqueId}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {userBadge.badge}
-                      </span>
-                    </div>
+                    <span className="text-sm font-medium text-primary">{userBadge.uniqueId}</span>
                   ) : null}
                 </div>
               )}
-              
-              <Link 
-                to="/" 
-                className="text-sm font-medium transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
+
+              {/* Auth Controls */}
+              <AuthControls />
+
+              {/* Deployment Info (Desktop) */}
+              {!deploymentInfo.hasMismatch && (
+                <div className="hidden md:block">
+                  <DeploymentInfo />
+                </div>
+              )}
+
+              {/* Mobile Menu Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
-                Home
-              </Link>
-              <Link 
-                to="/directory" 
-                className="text-sm font-medium transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Directory
-              </Link>
-              <Link 
-                to="/register" 
-                className="text-sm font-medium transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Register
-              </Link>
-              <Link 
-                to="/world" 
-                className="text-sm font-medium transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                World
-              </Link>
-              <Link 
-                to="/events" 
-                className="text-sm font-medium transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Events
-              </Link>
-              <a 
-                href="https://www.dmc-technologies.fr" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-sm font-medium transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Learn More
-              </a>
-              <div className="pt-2 border-t border-border/40">
-                <AuthControls />
-              </div>
-            </nav>
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </Button>
+            </div>
           </div>
-        )}
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden py-4 border-t">
+              <nav className="flex flex-col gap-3">
+                {/* User Badge (Mobile) */}
+                {isAuthenticated && userBadge && (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 mb-2">
+                    <IdCard className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium text-primary">{userBadge.uniqueId}</span>
+                    <Badge variant="secondary" className="ml-auto text-xs">
+                      {userBadge.badge}
+                    </Badge>
+                  </div>
+                )}
+
+                {navItems.map((item) => (
+                  <button
+                    key={item.path}
+                    onClick={() => handleNavClick(item.path)}
+                    className="text-left px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-primary hover:bg-accent transition-colors"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+
+                {/* Deployment Info (Mobile) */}
+                {!deploymentInfo.hasMismatch && (
+                  <div className="pt-2 border-t mt-2">
+                    <DeploymentInfo />
+                  </div>
+                )}
+              </nav>
+            </div>
+          )}
+        </div>
       </header>
 
+      {/* Main Content */}
       <main className="flex-1">
         <Outlet />
       </main>
 
-      <footer className="border-t border-border/40 bg-muted/30">
-        <div className="container py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex flex-col md:flex-row items-center gap-4">
-              <p className="text-sm text-muted-foreground text-center md:text-left">
-                © 2026. Built with ❤️ using{' '}
-                <a 
-                  href="https://caffeine.ai" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="font-medium hover:text-primary transition-colors"
-                >
-                  caffeine.ai
-                </a>
-              </p>
-              <DeploymentInfo />
-            </div>
-            <div className="flex gap-6 text-sm text-muted-foreground">
-              <Link to="/directory" className="hover:text-primary transition-colors">
-                Browse Novices
-              </Link>
-              <Link to="/register" className="hover:text-primary transition-colors">
-                Join Community
-              </Link>
-              <a 
-                href="https://www.dmc-technologies.fr" 
-                target="_blank" 
+      {/* Footer */}
+      <footer className="border-t bg-card/50 backdrop-blur-sm mt-auto">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span>© 2026. Built with</span>
+              <span className="text-primary">❤️</span>
+              <span>using</span>
+              <a
+                href="https://caffeine.ai"
+                target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
+                className="font-medium text-primary hover:underline inline-flex items-center gap-1"
+              >
+                caffeine.ai
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <a
+                href="https://dmctechnologies.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors inline-flex items-center gap-1"
               >
                 DMC Technologies
+                <ExternalLink className="h-3 w-3" />
               </a>
             </div>
           </div>

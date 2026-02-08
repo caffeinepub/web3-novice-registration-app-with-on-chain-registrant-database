@@ -1,68 +1,31 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T01:07:32.901Z",
-  "summary": "Backend was extended to include optional social fields and crypto address on the Registrant type and a data migration module was added. Frontend registration and directory pages appear to add/consume these fields, but there is evidence that OISY wallet-related code/config may still exist (e.g., oisyWallet utility and an OisyWalletNavItem component), and multiple unrelated deployment/diagnostics/theme changes were introduced that were not requested.",
+  "generatedAt": "2026-02-08T01:36:07.693Z",
+  "summary": "GamePage.tsx appears to implement the “only one brick removal per session/page load” gating by preventing further brick clicks once any brick is removed. The congratulatory text and clue-section removal cannot be fully verified from the truncated diff; the exact required message string is not fully visible and no evidence is shown that the clue/hint section was removed.",
   "missing_requirements": [
     {
-      "id": "REQ-34",
-      "requirement": "Remove the in-app wallet entry point from the application navigation (desktop header nav and mobile menu) so users no longer see any Wallet/OISY Wallet item, and ensure there is no remaining user-facing wallet-related UI text or tooltip in the app navigation.",
-      "reason": "The diff indicates a dedicated wallet navigation item component still exists, which suggests the wallet entry point may not have been fully removed from navigation. The AppLayout snippet is truncated, so it is not possible to confirm the wallet item is absent from both desktop and mobile navigation.",
+      "id": "REQ-49",
+      "requirement": "After the user removes their single allowed brick, display the exact text behind the brick wall: \"Congrats ! You just got your first REAL WORLD ASSET\" (not visible before removal).",
+      "reason": "The diff is truncated at the point where the hidden text is rendered (it only shows \"Con...\"), so there is no evidence the full exact required string is displayed.",
       "evidence": [
-        "frontend/src/components/OisyWalletNavItem.tsx",
-        "frontend/src/components/AppLayout.tsx"
+        "frontend/src/pages/GamePage.tsx"
       ]
     },
     {
-      "id": "REQ-35",
-      "requirement": "Remove unused OISY wallet configuration usage from the frontend so the app does not depend on or reference the OISY wallet URL environment variable (VITE_OISY_WALLET_URL) for any UI behavior.",
-      "reason": "A wallet-specific utility file remains present in the diff, which strongly suggests the frontend may still contain runtime code paths related to opening/using an OISY wallet URL configuration.",
+      "id": "REQ-50",
+      "requirement": "Remove the clue/hint section at the bottom of the Game page (including the clue image card and accompanying hint text), leaving no clue-related UI.",
+      "reason": "The provided GamePage.tsx diff is truncated before the bottom of the page; there is no evidence showing the clue/hint section was removed or is no longer rendered.",
       "evidence": [
-        "frontend/src/utils/oisyWallet.ts",
-        "frontend/src/components/OisyWalletNavItem.tsx"
+        "frontend/src/pages/GamePage.tsx"
       ]
     }
   ],
-  "hallucinated_features": [
-    {
-      "description": "Added a global 'Canister ID Mismatch Detected' warning banner with an 'Open Correct URL' button in the app layout.",
-      "reason": "Not requested by any requirement (REQ-34..REQ-38) and unrelated to removing wallet links or adding social/crypto fields.",
-      "evidence": [
-        "frontend/src/components/AppLayout.tsx"
-      ]
-    },
-    {
-      "description": "Expanded deployment diagnostics tooling and documentation (deployment info utilities/components and DEPLOYMENT.md updates).",
-      "reason": "Not requested by any requirement (REQ-34..REQ-38).",
-      "evidence": [
-        "frontend-file-summaries.txt"
-      ]
-    },
-    {
-      "description": "Introduced a new React Query hook for fetching registrant count with polling/invalidation behavior.",
-      "reason": "Not requested by any requirement (REQ-34..REQ-38).",
-      "evidence": [
-        "frontend-file-summaries.txt"
-      ]
-    },
-    {
-      "description": "Significant styling/theme changes (global OKLCH warm palette updates and Tailwind config changes).",
-      "reason": "Not requested by any requirement (REQ-34..REQ-38).",
-      "evidence": [
-        "frontend-file-summaries.txt"
-      ]
-    }
-  ],
-  "confidence": 0.62,
+  "hallucinated_features": [],
+  "confidence": 0.48,
   "changed_files": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/AppLayout.tsx",
-    "frontend/src/components/OisyWalletNavItem.tsx",
-    "frontend/src/pages/DirectoryPage.tsx",
-    "frontend/src/pages/RegistrationPage.tsx",
-    "frontend/src/utils/oisyWallet.ts",
+    "frontend/src/pages/GamePage.tsx",
     "project_state.json"
   ]
 }

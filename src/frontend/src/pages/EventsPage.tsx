@@ -119,7 +119,7 @@ export default function EventsPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg">
-              <Link to="/register">Complete Your Profile</Link>
+              <Link to="/registration">Complete Your Profile</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
               <Link to="/directory">Browse Community</Link>

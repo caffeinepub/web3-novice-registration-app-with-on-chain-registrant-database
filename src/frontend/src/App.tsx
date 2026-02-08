@@ -1,12 +1,25 @@
 import { RouterProvider, createRouter, createRoute, createRootRoute } from '@tanstack/react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
+import AppLayout from './components/AppLayout';
 import LandingPage from './pages/LandingPage';
 import RegistrationPage from './pages/RegistrationPage';
 import DirectoryPage from './pages/DirectoryPage';
 import EventsPage from './pages/EventsPage';
 import WorldPage from './pages/WorldPage';
-import AppLayout from './components/AppLayout';
+import PublicProfilesPage from './pages/PublicProfilesPage';
+import GamePage from './pages/GamePage';
 import ProfileSetupModal from './components/ProfileSetupModal';
+import { Toaster } from '@/components/ui/sonner';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -23,9 +36,9 @@ const indexRoute = createRoute({
   component: LandingPage,
 });
 
-const registerRoute = createRoute({
+const registrationRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/register',
+  path: '/registration',
   component: RegistrationPage,
 });
 
@@ -47,7 +60,27 @@ const worldRoute = createRoute({
   component: WorldPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, registerRoute, directoryRoute, eventsRoute, worldRoute]);
+const publicProfilesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/public-profiles',
+  component: PublicProfilesPage,
+});
+
+const gameRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/game',
+  component: GamePage,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  registrationRoute,
+  directoryRoute,
+  eventsRoute,
+  worldRoute,
+  publicProfilesRoute,
+  gameRoute,
+]);
 
 const router = createRouter({ routeTree });
 
@@ -59,8 +92,11 @@ declare module '@tanstack/react-router' {
 
 export default function App() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <RouterProvider router={router} />
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <Toaster />
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

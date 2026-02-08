@@ -3,16 +3,27 @@ import Runtime "mo:core/Runtime";
 import Map "mo:core/Map";
 import Text "mo:core/Text";
 import Iter "mo:core/Iter";
+import Array "mo:core/Array";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-import Migration "migration";
 
-// Live implementation, already deployed to the IC
-// Add migration clause:
-(with migration = Migration.run)
+
+
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
+
+  public type Sector = {
+    #marchand;
+    #association;
+    #professionLiberal;
+    #services;
+    #fonctionnaire;
+    #artiste;
+    #sportif;
+    #etudiant;
+    #aucuneActivite;
+  };
 
   public type Registrant = {
     id : Text;
@@ -25,6 +36,22 @@ actor {
     telegram : ?Text;
     website : ?Text;
     cryptoAddress : ?Text;
+    isPublic : Bool;
+    sector : Sector;
+  };
+
+  public type PublicRegistrant = {
+    id : Text;
+    name : Text;
+    email : Text;
+    skillLevel : Text;
+    interests : [Text];
+    facebook : ?Text;
+    instagram : ?Text;
+    telegram : ?Text;
+    website : ?Text;
+    cryptoAddress : ?Text;
+    sector : Sector;
   };
 
   public type UserProfile = {
@@ -131,11 +158,61 @@ actor {
     userBadges.get(principal);
   };
 
-  // New API for Digital World to get total number of registrants
+  // Public API: Returns only public registrants for a specific sector or all sectors
+  // No authentication required - this is intentionally public data
+  public query func getPublicRegistrantsBySector(optSector : ?Sector) : async [PublicRegistrant] {
+    let allValues = registrants.values().toArray();
+    let publicValues = allValues.filter(
+      func(registrant) {
+        if (not registrant.isPublic) { false } else {
+          switch (optSector) {
+            case (null) { true };
+            case (?sector) { registrant.sector == sector };
+          };
+        };
+      }
+    );
+    publicValues.map<Registrant, PublicRegistrant>(
+      func(r) {
+        {
+          id = r.id;
+          name = r.name;
+          email = r.email;
+          skillLevel = r.skillLevel;
+          interests = r.interests;
+          facebook = r.facebook;
+          instagram = r.instagram;
+          telegram = r.telegram;
+          website = r.website;
+          cryptoAddress = r.cryptoAddress;
+          sector = r.sector;
+        };
+      }
+    );
+  };
+
+  // DEPRECATED: Only for legacy compatibility, should not be used for public listings
   public query ({ caller }) func getTotalNumberOfRegistrants() : async Nat {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only authenticated users can view registrant count");
     };
     registrants.size();
+  };
+
+  // Public API: Get count of public registrants by sector
+  // No authentication required - this is intentionally public data
+  public query func getPublicRegistrantsCountBySector(optSector : ?Sector) : async Nat {
+    var count = 0;
+    for ((_, r) in registrants.entries()) {
+      if (r.isPublic) {
+        switch (optSector) {
+          case (null) { count += 1 };
+          case (?sector) {
+            if (r.sector == sector) { count += 1 };
+          };
+        };
+      };
+    };
+    count;
   };
 };

@@ -1,126 +1,75 @@
 {
   "kind": "build_request",
-  "title": "Remove in-app wallet link and add social links + crypto address to registrant profiles",
+  "title": "Update Game page: allow removing only one brick, reveal congratulatory text, remove clue section",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-34",
-      "text": "Remove the in-app wallet entry point from the application navigation (desktop header nav and mobile menu) so users no longer see any Wallet/OISY Wallet item, and ensure there is no remaining user-facing wallet-related UI text or tooltip in the app navigation.",
+      "id": "REQ-48",
+      "text": "Update the Game page so a user can remove only one brick total per page load/session. After one brick has been removed, all remaining intact bricks must be disabled (no further confirmation dialog, no additional removals).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "enlève le wallet de l'application"
+          "l'utilisateur ne peut retirer qu'une seule brique"
         ]
       },
       "acceptanceCriteria": [
-        "The header navigation no longer renders the wallet navigation item on desktop.",
-        "The mobile menu no longer renders the wallet navigation item.",
-        "No wallet-related tooltip/disabled state messaging is shown anywhere in the navigation."
+        "On /game, the first intact brick click still opens the existing confirmation dialog flow and allows removing that single brick.",
+        "After one brick is removed, clicking any other intact brick does nothing (no dialog opens) and no additional bricks can be removed.",
+        "The removed brick remains removed; other bricks remain visually intact/unclickable for removal."
       ]
     },
     {
-      "id": "REQ-35",
-      "text": "Remove unused OISY wallet configuration usage from the frontend so the app does not depend on or reference the OISY wallet URL environment variable (VITE_OISY_WALLET_URL) for any UI behavior.",
+      "id": "REQ-49",
+      "text": "After the user removes their single allowed brick, display the following exact text behind the brick wall: \"Congrats ! You just got your first REAL WORLD ASSET\". The text must be visible in the brick-wall area behind/under the grid (i.e., revealed by removal).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "enlève le wallet de l'application"
+          "derr!ère les briques le texte qui apparait est : \"Congrats ! You just got your first REAL WORLD ASSET\""
         ]
       },
       "acceptanceCriteria": [
-        "The frontend builds without referencing OISY wallet URL configuration for navigation.",
-        "No runtime code paths attempt to open an OISY wallet URL."
+        "Before any brick is removed, the congratulatory text is not visible.",
+        "After a brick is removed, the congratulatory text becomes visible behind the grid (in the brick wall card area).",
+        "The displayed string matches exactly: Congrats ! You just got your first REAL WORLD ASSET"
       ]
     },
     {
-      "id": "REQ-36",
-      "text": "Extend the backend registrant data model and APIs to support saving the following optional fields for each registrant: Facebook, Instagram, Telegram, website URL, and a crypto address, and persist these values in the registrant record returned by existing registrant read/list/search APIs.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "permet aux utilisateurs d'enregistrer leurs réseaux sociaux : facebook, instagram, telegram, site internet,  adresse crypto."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend registrant type includes fields for Facebook, Instagram, Telegram, website, and crypto address (all optional).",
-        "Calling addRegistrant with these fields saves them and getRegistrant/listAllRegistrants/searchRegistrants return them.",
-        "Existing registrant functionality (create, read, list, search) continues to work for records that do not provide these optional fields."
-      ]
-    },
-    {
-      "id": "REQ-37",
-      "text": "Update the registration/profile form UI to allow authenticated users to input and save optional social links (Facebook, Instagram, Telegram, website) and an optional crypto address as part of their registrant profile, without making these fields required.",
+      "id": "REQ-50",
+      "text": "Remove the clue/hint section at the bottom of the Game page (including the clue image card and its accompanying hint text), and ensure there is no remaining clue-related UI on /game.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "permet aux utilisateurs d'enregistrer leurs réseaux sociaux : facebook, instagram, telegram, site internet,  adresse crypto."
+          "enlève l'indice en bas de page"
         ]
       },
       "acceptanceCriteria": [
-        "The registration page includes new optional inputs labeled in English: “Facebook”, “Instagram”, “Telegram”, “Website”, and “Crypto address”.",
-        "Submitting the form saves these values to the backend along with existing registrant fields.",
-        "When revisiting the registration page, previously saved values for these fields are pre-filled from the existing registrant record.",
-        "Leaving these fields empty does not block submission."
-      ]
-    },
-    {
-      "id": "REQ-38",
-      "text": "Update the directory UI to display a registrant’s social links (Facebook, Instagram, Telegram, website) and crypto address when present, and hide each field when it is not provided.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "permet aux utilisateurs d'enregistrer leurs réseaux sociaux : facebook, instagram, telegram, site internet,  adresse crypto."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Directory cards conditionally render each social link field only if it exists for that registrant.",
-        "Directory cards conditionally render the crypto address only if it exists for that registrant.",
-        "The directory page remains usable and visually consistent when none of the optional fields are present for a registrant."
+        "The \"Clue Image\" card is no longer rendered on the Game page.",
+        "The bottom hint text (e.g., instructions to keep removing bricks) is no longer present.",
+        "No other clue/hint UI remains on the Game page."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
-    "Do not edit any frontend files under frontend/src/components/ui or any paths listed in frontend.immutablePaths.",
-    "Use English for any user-facing text."
+    "Use English for any user-facing text.",
+    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Keep changes scoped to the existing Game page implementation (frontend/src/pages/GamePage.tsx)."
   ],
   "nonGoals": [
-    "Do not add third-party social login or OAuth integrations (only store user-provided social link text).",
-    "Do not add any wallet feature replacement or alternative wallet integrations.",
-    "Do not change Internet Identity authentication behavior."
+    "Do not add backend APIs or persistence for the game state.",
+    "Do not change global navigation or routes.",
+    "Do not generate or modify static image assets for this request."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [
-      "Remove the in-app wallet navigation entry point.",
-      "Allow users to save social links (Facebook, Instagram, Telegram, website) and a crypto address in their profile/registrant record."
-    ],
-    "goalsToRemove": [],
-    "preferencesToAdd": [
-      "All new user-facing copy should be in English."
-    ],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

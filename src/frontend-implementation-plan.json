@@ -1,79 +1,53 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Remove wallet navigation and add social/crypto fields to registrant profile UI",
+  "title": "Game page: single brick removal, reveal congratulatory text, remove clue section",
   "requirements": [
     {
-      "id": "REQ-34",
-      "summary": "Remove all Wallet/OISY Wallet navigation entry points from desktop header nav and mobile menu, including any wallet-related tooltip/disabled messaging in navigation.",
+      "id": "REQ-48",
+      "summary": "Limit gameplay to a single brick removal per page load/session and disable all remaining intact bricks afterward.",
       "acceptanceCriteria": [
-        "The header navigation no longer renders the wallet navigation item on desktop.",
-        "The mobile menu no longer renders the wallet navigation item.",
-        "No wallet-related tooltip/disabled state messaging is shown anywhere in the navigation."
+        "On /game, the first intact brick click still opens the existing confirmation dialog flow and allows removing that single brick.",
+        "After one brick is removed, clicking any other intact brick does nothing (no dialog opens) and no additional bricks can be removed.",
+        "The removed brick remains removed; other bricks remain visually intact/unclickable for removal."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/AppLayout.tsx",
+          "path": "frontend/src/pages/GamePage.tsx",
           "operation": "modify",
-          "description": "Remove import and rendering of the wallet navigation item from both the desktop nav and the mobile menu so no wallet UI text/tooltips appear in navigation."
+          "description": "Track whether the user has already removed a brick (derive from removedCount or store a boolean set on first removal). Gate handleBrickClick so it only opens the existing confirmation dialog when no brick has been removed yet. After one removal, ensure all intact bricks are disabled (e.g., disabled prop true) and do not trigger any dialog/open state. Keep all changes scoped to this file per constraints."
         }
       ]
     },
     {
-      "id": "REQ-35",
-      "summary": "Remove unused OISY wallet configuration usage from the frontend so the app no longer references VITE_OISY_WALLET_URL or attempts to open an OISY wallet URL.",
+      "id": "REQ-49",
+      "summary": "Reveal the exact congratulatory text behind the brick wall after the single brick removal occurs.",
       "acceptanceCriteria": [
-        "The frontend builds without referencing OISY wallet URL configuration for navigation.",
-        "No runtime code paths attempt to open an OISY wallet URL."
+        "Before any brick is removed, the congratulatory text is not visible.",
+        "After a brick is removed, the congratulatory text becomes visible behind the grid (in the brick wall card area).",
+        "The displayed string matches exactly: Congrats ! You just got your first REAL WORLD ASSET"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/OisyWalletNavItem.tsx",
-          "operation": "delete",
-          "description": "Delete the wallet navigation component to eliminate all remaining UI and runtime behavior that reads wallet configuration or opens the wallet URL."
-        },
-        {
-          "path": "frontend/src/utils/oisyWallet.ts",
-          "operation": "delete",
-          "description": "Delete the OISY wallet URL helper to remove all runtime references to VITE_OISY_WALLET_URL from the codebase."
-        },
-        {
-          "path": "frontend/src/components/AppLayout.tsx",
+          "path": "frontend/src/pages/GamePage.tsx",
           "operation": "modify",
-          "description": "Ensure any leftover imports/usages of OisyWalletNavItem (and any related wallet config helpers) are removed so the bundle no longer includes wallet configuration code."
+          "description": "Add a behind-the-grid layer within the Brick Wall card area that conditionally renders the exact string \"Congrats ! You just got your first REAL WORLD ASSET\" only when a brick has been removed. Ensure the text is visually located behind/under the grid so it is revealed by the removed brick (without adding new assets or modifying other pages/files)."
         }
       ]
     },
     {
-      "id": "REQ-37",
-      "summary": "Extend the registration/profile form UI with optional inputs for Facebook, Instagram, Telegram, Website, and Crypto address; save and pre-fill these fields from the registrant record.",
+      "id": "REQ-50",
+      "summary": "Remove the clue/hint section UI from the bottom/right side of the Game page.",
       "acceptanceCriteria": [
-        "The registration page includes new optional inputs labeled in English: “Facebook”, “Instagram”, “Telegram”, “Website”, and “Crypto address”.",
-        "Submitting the form saves these values to the backend along with existing registrant fields.",
-        "When revisiting the registration page, previously saved values for these fields are pre-filled from the existing registrant record.",
-        "Leaving these fields empty does not block submission."
+        "The \"Clue Image\" card is no longer rendered on the Game page.",
+        "The bottom hint text (e.g., instructions to keep removing bricks) is no longer present.",
+        "No other clue/hint UI remains on the Game page."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/RegistrationPage.tsx",
+          "path": "frontend/src/pages/GamePage.tsx",
           "operation": "modify",
-          "description": "Add optional form state and inputs for facebook/instagram/telegram/website/cryptoAddress (English labels), prefill them from the existing registrant data when available, and include them in the registrant payload when saving without adding required validation."
-        }
-      ]
-    },
-    {
-      "id": "REQ-38",
-      "summary": "Update directory cards to conditionally display a registrant’s social links (Facebook, Instagram, Telegram, Website) and crypto address only when provided.",
-      "acceptanceCriteria": [
-        "Directory cards conditionally render each social link field only if it exists for that registrant.",
-        "Directory cards conditionally render the crypto address only if it exists for that registrant.",
-        "The directory page remains usable and visually consistent when none of the optional fields are present for a registrant."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/DirectoryPage.tsx",
-          "operation": "modify",
-          "description": "Extend the registrant card UI to render Facebook/Instagram/Telegram/Website/Crypto address sections only when the corresponding optional fields exist on the registrant record, keeping layout consistent when absent."
+          "description": "Delete the entire Clue Image card section (including the image and the hint text) from the Game page layout, and adjust the Game Area layout accordingly so no clue/hint UI remains on /game. Keep changes scoped to this file per constraints."
         }
       ]
     }

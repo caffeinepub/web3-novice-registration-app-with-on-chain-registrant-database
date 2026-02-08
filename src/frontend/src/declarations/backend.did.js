@@ -8,15 +8,28 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const Sector = IDL.Variant({
+  'professionLiberal' : IDL.Null,
+  'etudiant' : IDL.Null,
+  'artiste' : IDL.Null,
+  'aucuneActivite' : IDL.Null,
+  'sportif' : IDL.Null,
+  'fonctionnaire' : IDL.Null,
+  'services' : IDL.Null,
+  'marchand' : IDL.Null,
+  'association' : IDL.Null,
+});
 export const Registrant = IDL.Record({
   'id' : IDL.Text,
   'cryptoAddress' : IDL.Opt(IDL.Text),
   'interests' : IDL.Vec(IDL.Text),
   'instagram' : IDL.Opt(IDL.Text),
   'name' : IDL.Text,
+  'sector' : Sector,
   'email' : IDL.Text,
   'website' : IDL.Opt(IDL.Text),
   'facebook' : IDL.Opt(IDL.Text),
+  'isPublic' : IDL.Bool,
   'skillLevel' : IDL.Text,
   'telegram' : IDL.Opt(IDL.Text),
 });
@@ -31,6 +44,19 @@ export const UserBadge = IDL.Record({
   'uniqueId' : IDL.Text,
   'badge' : IDL.Text,
 });
+export const PublicRegistrant = IDL.Record({
+  'id' : IDL.Text,
+  'cryptoAddress' : IDL.Opt(IDL.Text),
+  'interests' : IDL.Vec(IDL.Text),
+  'instagram' : IDL.Opt(IDL.Text),
+  'name' : IDL.Text,
+  'sector' : Sector,
+  'email' : IDL.Text,
+  'website' : IDL.Opt(IDL.Text),
+  'facebook' : IDL.Opt(IDL.Text),
+  'skillLevel' : IDL.Text,
+  'telegram' : IDL.Opt(IDL.Text),
+});
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
@@ -40,6 +66,16 @@ export const idlService = IDL.Service({
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getOrCreateUserBadge' : IDL.Func([], [UserBadge], []),
+  'getPublicRegistrantsBySector' : IDL.Func(
+      [IDL.Opt(Sector)],
+      [IDL.Vec(PublicRegistrant)],
+      ['query'],
+    ),
+  'getPublicRegistrantsCountBySector' : IDL.Func(
+      [IDL.Opt(Sector)],
+      [IDL.Nat],
+      ['query'],
+    ),
   'getRegistrant' : IDL.Func([IDL.Principal], [IDL.Opt(Registrant)], ['query']),
   'getTotalNumberOfRegistrants' : IDL.Func([], [IDL.Nat], ['query']),
   'getUserBadge' : IDL.Func([IDL.Principal], [IDL.Opt(UserBadge)], ['query']),
@@ -57,15 +93,28 @@ export const idlService = IDL.Service({
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const Sector = IDL.Variant({
+    'professionLiberal' : IDL.Null,
+    'etudiant' : IDL.Null,
+    'artiste' : IDL.Null,
+    'aucuneActivite' : IDL.Null,
+    'sportif' : IDL.Null,
+    'fonctionnaire' : IDL.Null,
+    'services' : IDL.Null,
+    'marchand' : IDL.Null,
+    'association' : IDL.Null,
+  });
   const Registrant = IDL.Record({
     'id' : IDL.Text,
     'cryptoAddress' : IDL.Opt(IDL.Text),
     'interests' : IDL.Vec(IDL.Text),
     'instagram' : IDL.Opt(IDL.Text),
     'name' : IDL.Text,
+    'sector' : Sector,
     'email' : IDL.Text,
     'website' : IDL.Opt(IDL.Text),
     'facebook' : IDL.Opt(IDL.Text),
+    'isPublic' : IDL.Bool,
     'skillLevel' : IDL.Text,
     'telegram' : IDL.Opt(IDL.Text),
   });
@@ -80,6 +129,19 @@ export const idlFactory = ({ IDL }) => {
     'uniqueId' : IDL.Text,
     'badge' : IDL.Text,
   });
+  const PublicRegistrant = IDL.Record({
+    'id' : IDL.Text,
+    'cryptoAddress' : IDL.Opt(IDL.Text),
+    'interests' : IDL.Vec(IDL.Text),
+    'instagram' : IDL.Opt(IDL.Text),
+    'name' : IDL.Text,
+    'sector' : Sector,
+    'email' : IDL.Text,
+    'website' : IDL.Opt(IDL.Text),
+    'facebook' : IDL.Opt(IDL.Text),
+    'skillLevel' : IDL.Text,
+    'telegram' : IDL.Opt(IDL.Text),
+  });
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
@@ -89,6 +151,16 @@ export const idlFactory = ({ IDL }) => {
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getOrCreateUserBadge' : IDL.Func([], [UserBadge], []),
+    'getPublicRegistrantsBySector' : IDL.Func(
+        [IDL.Opt(Sector)],
+        [IDL.Vec(PublicRegistrant)],
+        ['query'],
+      ),
+    'getPublicRegistrantsCountBySector' : IDL.Func(
+        [IDL.Opt(Sector)],
+        [IDL.Nat],
+        ['query'],
+      ),
     'getRegistrant' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(Registrant)],

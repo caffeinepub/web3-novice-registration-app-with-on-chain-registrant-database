@@ -1,12 +1,18 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 27,
-  "summary": "Build a beginner-friendly ICP/Web3 onboarding web app that creates a user ID and badge on first login, maintains a registrant database, and links to an external Web2 site describing the ICP real-world network initiative (with an events/coming-soon page for next steps).",
+  "projectStateVersion": 33,
+  "summary": "Build a beginner-friendly ICP/Web3 onboarding web app that creates a user ID and badge on first login, maintains a persistent registrant database across upgrades, supports optional public profiles (with a sector-based public listing), and links to an external Web2 site describing the ICP real-world network initiative (with an events/coming-soon page for next steps).",
   "architectural_notes": [
     "Plan a new 'Planet/Digital World' visualization page that reflects registrant count in real time and adds a new visible 'inhabitant' representation for each new registrant.",
     "Define how the points system is managed 'with my profile' (e.g., self-managed vs admin/allowlisted management) and where the UI lives in the profile page.",
     "Extend the registrant/profile data model to include optional social links (Facebook/Instagram/Telegram/website) and a crypto address, with basic validation and safe display in the UI.",
-    "Remove the OISY wallet navigation item and any related configuration/UX messaging from the app header/mobile menu. Verify no dead links remain."
+    "Remove the OISY wallet navigation item and any related configuration/UX messaging from the app header/mobile menu. Verify no dead links remain.",
+    "Ensure registrant data persists across all future app changes/upgrades (no loss of community members); use stable storage/upgrade-safe patterns and plan any needed data migrations.",
+    "Extend registrant/profile data model to include a public/private visibility flag and a sector-of-activity category to drive sector-based public listings.",
+    "Game UX: require an explicit user validation/confirmation step before allowing the \"remove a brick\" action.",
+    "Game UX: user can remove only one brick total (enforce one-time removal per user/session as intended).",
+    "Game UX/content: after brick removal, reveal the message text: \"Congrats ! You just got your first REAL WORLD ASSET\" behind the bricks.",
+    "Game UX: remove the bottom-of-page clue/hint element from the Game UI."
   ],
   "known_issues": [
     "Deployment/publish-to-live step failed previously (“publish step hit a snag” / build error); user requested retry.",
@@ -269,6 +275,78 @@
         "REQ-38"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-the-registration-profile-form-to-let-authenticated-users-choose-whether-their-profile-is-public-or-private-and-select-a-sector-of-activity-add-ui-fields-a-visibility-control-with-clear-labels-e-g-public-profile-on-off-a-sector-dropdown-with-the-sector-options-merchant-association-liberal-profession-professional-services-civil-servant-artist-athlete-student-no-activity-persist-these-fields-to-the-backend-when-saving-the-registrant-profile-and-load-them-when-editing-an-existing-profile",
+      "title": "Update the Registration/Profile form to let authenticated users choose whether their profile is public or private, and select a sector of activity.\n\nAdd UI fields:\n- A visibility control with clear labels (e.g., \"Public profile\" on/off)\n- A sector dropdown with the sector options: \"Merchant\", \"Association\", \"Liberal Profession\", \"Professional Services\", \"Civil Servant\", \"Artist\", \"Athlete\", \"Student\", \"No Activity\"\n\nPersist these fields to the backend when saving the registrant profile, and load them when editing an existing profile.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-dedicated-public-page-that-lists-public-profiles-grouped-filterable-by-sector-the-page-must-be-accessible-without-login-allow-selecting-one-of-the-defined-sectors-or-all-display-only-public-profiles-returned-by-the-new-backend-public-listing-api-hide-any-fields-that-are-not-present-on-a-profile-consistent-with-existing-directory-behavior-add-navigation-access-to-this-page-from-the-app-header-desktop-mobile-menu-use-english-for-all-user-facing-text",
+      "title": "Add a dedicated public page that lists public profiles grouped/filterable by sector.\n\nThe page must:\n- Be accessible without login\n- Allow selecting one of the defined sectors or \"All\"\n- Display only public profiles returned by the new backend public listing API\n- Hide any fields that are not present on a profile (consistent with existing directory behavior)\n\nAdd navigation access to this page from the app header (desktop + mobile menu). Use English for all user-facing text.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-digital-world-world-page-scene-so-community-members-are-represented-by-stars-instead-of-dot-sphere-points-keep-deterministic-placement-stable-across-refreshes-and-preserve-the-existing-new-member-appears-entry-animation-behavior-when-the-registrant-total-increases",
+      "title": "Update the Digital World (World page scene) so community members are represented by stars instead of dot/sphere points.\n\nKeep deterministic placement stable across refreshes and preserve the existing “new member appears” entry animation behavior when the registrant total increases.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-game-section-to-the-frontend-that-implements-a-brick-removal-experience-a-wall-grid-of-removable-bricks-as-a-dedicated-page-reachable-via-the-app-navigation-desktop-header-and-mobile-menu-use-english-for-all-user-facing-text",
+      "title": "Add a new \"Game\" section to the frontend that implements a brick-removal experience (a wall/grid of removable bricks) as a dedicated page reachable via the app navigation (desktop header and mobile menu). Use English for all user-facing text.",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-require-explicit-user-validation-of-an-interaction-before-any-brick-can-be-removed-when-a-user-attempts-to-remove-a-brick-show-a-confirmation-step-e-g-dialog-sheet-that-requires-an-explicit-confirm-action-before-enabling-the-final-remove-action-without-confirmation-the-brick-must-remain-unchanged",
+      "title": "Require explicit user validation of an interaction before any brick can be removed: when a user attempts to remove a brick, show a confirmation step (e.g., dialog/sheet) that requires an explicit confirm action before enabling the final \"Remove\" action; without confirmation, the brick must remain unchanged.",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-and-display-a-clue-image-in-the-game-ui-where-the-clue-image-content-is-the-text-nft-as-the-visual-clue-store-the-generated-image-under-frontend-public-assets-generated-and-reference-it-directly-from-the-frontend",
+      "title": "Add and display a clue image in the Game UI where the clue image content is the text \"NFT\" (as the visual clue). Store the generated image under frontend/public/assets/generated and reference it directly from the frontend.",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-game-page-so-a-user-can-remove-only-one-brick-total-per-page-load-session-after-one-brick-has-been-removed-all-remaining-intact-bricks-must-be-disabled-no-further-confirmation-dialog-no-additional-removals",
+      "title": "Update the Game page so a user can remove only one brick total per page load/session. After one brick has been removed, all remaining intact bricks must be disabled (no further confirmation dialog, no additional removals).",
+      "reqIds": [
+        "REQ-48"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-after-the-user-removes-their-single-allowed-brick-display-the-following-exact-text-behind-the-brick-wall-congrats-you-just-got-your-first-real-world-asset-the-text-must-be-visible-in-the-brick-wall-area-behind-under-the-grid-i-e-revealed-by-removal",
+      "title": "After the user removes their single allowed brick, display the following exact text behind the brick wall: \"Congrats ! You just got your first REAL WORLD ASSET\". The text must be visible in the brick-wall area behind/under the grid (i.e., revealed by removal).",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-clue-hint-section-at-the-bottom-of-the-game-page-including-the-clue-image-card-and-its-accompanying-hint-text-and-ensure-there-is-no-remaining-clue-related-ui-on-game",
+      "title": "Remove the clue/hint section at the bottom of the Game page (including the clue image card and its accompanying hint text), and ensure there is no remaining clue-related UI on /game.",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -372,6 +450,54 @@
       "reqIds": [
         "REQ-36"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Allow community members to choose whether their profile is public or private; private profiles must not appear in public listings.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "If a profile is public, show it on a dedicated public page grouped/filterable by sector of activity: commerçant, association, profession libérale, services professionnels, fonctionnaire, artiste, sportif, étudiants, sans activité.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Update the Digital World/World community visualization so members are represented by stars instead of dot images/points in the universe.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Extend the backend Registrant model to support profile visibility and sector of activity.\n\nAdd:\n- `isPublic : Bool` (whether the profile is publicly visible)\n- `sector : Text` (one of: \"Merchant\", \"Association\", \"Liberal Profession\", \"Professional Services\", \"Civil Servant\", \"Artist\", \"Athlete\", \"Student\", \"No Activity\")\n\nEnsure existing registrant APIs continue to work with the new fields, and that saving a registrant stores these new fields.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Add backend query API(s) to support a dedicated public listing page grouped/filterable by sector.\n\nThe API(s) must:\n- Return only registrants whose `isPublic` is `true`\n- Support filtering by sector (exact match) and a way to request all public profiles\n- Not require authentication to read public profiles",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Ensure registrants (community members) remain registered across canister upgrades and application modifications.\n\nUpdate backend state handling so that registrants are persisted in stable storage across upgrades. If a state schema change is required, add/extend the migration logic accordingly so existing deployed data is preserved and new fields (`isPublic`, `sector`) are populated with defaults for old records.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Game: user can remove only one brick total; after removal reveal the behind-the-bricks text \"Congrats ! You just got your first REAL WORLD ASSET\"; remove the bottom-of-page clue/hint from the Game UI.",
+      "reqIds": [],
       "status": "pending"
     }
   ],

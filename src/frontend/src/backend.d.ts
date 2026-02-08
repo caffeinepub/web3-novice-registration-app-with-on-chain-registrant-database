@@ -12,20 +12,46 @@ export interface UserBadge {
     uniqueId: string;
     badge: string;
 }
-export interface Registrant {
+export interface PublicRegistrant {
     id: string;
     cryptoAddress?: string;
     interests: Array<string>;
     instagram?: string;
     name: string;
+    sector: Sector;
     email: string;
     website?: string;
     facebook?: string;
     skillLevel: string;
     telegram?: string;
 }
+export interface Registrant {
+    id: string;
+    cryptoAddress?: string;
+    interests: Array<string>;
+    instagram?: string;
+    name: string;
+    sector: Sector;
+    email: string;
+    website?: string;
+    facebook?: string;
+    isPublic: boolean;
+    skillLevel: string;
+    telegram?: string;
+}
 export interface UserProfile {
     name: string;
+}
+export enum Sector {
+    professionLiberal = "professionLiberal",
+    etudiant = "etudiant",
+    artiste = "artiste",
+    aucuneActivite = "aucuneActivite",
+    sportif = "sportif",
+    fonctionnaire = "fonctionnaire",
+    services = "services",
+    marchand = "marchand",
+    association = "association"
 }
 export enum UserRole {
     admin = "admin",
@@ -39,6 +65,8 @@ export interface backendInterface {
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getOrCreateUserBadge(): Promise<UserBadge>;
+    getPublicRegistrantsBySector(optSector: Sector | null): Promise<Array<PublicRegistrant>>;
+    getPublicRegistrantsCountBySector(optSector: Sector | null): Promise<bigint>;
     getRegistrant(principal: Principal): Promise<Registrant | null>;
     getTotalNumberOfRegistrants(): Promise<bigint>;
     getUserBadge(principal: Principal): Promise<UserBadge | null>;

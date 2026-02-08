@@ -49,11 +49,11 @@ export default function LandingPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 {isAuthenticated ? (
                   <Button asChild size="lg" className="text-lg px-8">
-                    <Link to="/register">Complete Your Profile</Link>
+                    <Link to="/registration">Complete Your Profile</Link>
                   </Button>
                 ) : (
                   <Button asChild size="lg" className="text-lg px-8">
-                    <Link to="/register">Get Started</Link>
+                    <Link to="/registration">Get Started</Link>
                   </Button>
                 )}
                 <Button asChild variant="outline" size="lg" className="text-lg px-8">
@@ -140,7 +140,7 @@ export default function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="text-lg px-8">
-                <Link to="/register">Join Now</Link>
+                <Link to="/registration">Join Now</Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="text-lg px-8">
                 <Link to="/events">What's Next?</Link>

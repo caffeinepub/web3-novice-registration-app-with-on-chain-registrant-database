@@ -1,53 +1,68 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "In-app header entry point for OISY wallet (configurable external link)",
+  "title": "Mainnet deployment diagnostics and URL/canister ID mismatch remediation (frontend-only)",
   "requirements": [
     {
-      "id": "REQ-26",
-      "summary": "Add a header + mobile-menu navigation entry that lets authenticated users open the OISY wallet in a new tab with safe link attributes, and shows a clear sign-in prompt state otherwise.",
+      "id": "REQ-31",
+      "summary": "Add a documented, repeatable way to capture and record the deployed frontend/backend canister IDs after an IC deployment.",
       "acceptanceCriteria": [
-        "When the user is authenticated, a \"Wallet\" (or \"OISY Wallet\") navigation item is visible in the header navigation and in the mobile menu.",
-        "Clicking the navigation item opens the OISY wallet in a new browser tab/window using target=\"_blank\" and rel=\"noopener noreferrer\".",
-        "When the user is not authenticated, the wallet navigation item is either hidden or replaced with a disabled/locked state that clearly prompts the user to sign in first (English UI text).",
-        "No changes are made to immutable frontend paths listed in SYSTEM_CONTEXT (compose existing UI components instead)."
+        "A new `dfx deploy --network ic` completes successfully for both backend and frontend canisters.",
+        "The exact deployed canister IDs are recorded from the deploy output (frontend canister ID and backend canister ID)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/OisyWalletNavItem.tsx",
-          "operation": "create",
-          "description": "Create a small reusable nav item component that renders (1) an enabled external-link anchor for authenticated users when configured, or (2) a disabled/locked UI state prompting sign-in when unauthenticated. Use the app’s existing authentication state via useCurrentUser (built on the authorization component’s frontend authentication approach). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/AppLayout.tsx",
+          "path": "frontend/DEPLOYMENT.md",
           "operation": "modify",
-          "description": "Wire the new OISY wallet navigation item into both the desktop header nav and the mobile menu, ensuring the link opens in a new tab with rel=\"noopener noreferrer\" and matches existing header/mobile styling patterns. Compose existing UI components (do not modify files under frontend/src/components/ui). Verify the component's usage instructions before implementing."
+          "description": "Update the deployment guide to include a clearly labeled section/template for recording the *exact* deployed frontend and backend canister IDs copied from `dfx deploy --network ic` output, plus the resulting public URL. Emphasize copying values verbatim from deploy output and storing them for later verification."
         }
       ]
     },
     {
-      "id": "REQ-27",
-      "summary": "Add a single frontend configuration point for the OISY wallet URL and disable the wallet action with a non-blocking explanatory message when it is not configured.",
+      "id": "REQ-32",
+      "summary": "Improve mainnet reachability verification guidance and ensure in-app diagnostics normalize/validate the active canister URL (icp0.io) to avoid “Canister ID Not Resolved” confusion.",
       "acceptanceCriteria": [
-        "The wallet link URL is configurable via a single frontend configuration point (e.g., an environment variable) without requiring backend changes.",
-        "If the wallet URL is missing/empty, the UI does not crash; the wallet action is disabled and a concise English message explains that the wallet link is not configured.",
-        "Default app flows (registration, directory browsing, world page) continue to work unchanged when the wallet URL is not configured."
+        "Opening the new deployed frontend public URL `https://[frontend-canister-id].icp0.io/` loads the app successfully in a fresh/incognito browser session.",
+        "The previously reported failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io` is either confirmed as no longer the active deployment URL (superseded by the new frontend canister ID) or is remediated so it resolves correctly.",
+        "No “Canister ID Not Resolved” gateway error occurs for the correct deployed frontend URL."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/utils/oisyWallet.ts",
-          "operation": "create",
-          "description": "Add a single, centralized frontend configuration utility that reads the OISY wallet URL from a build-time env var (e.g., import.meta.env.VITE_OISY_WALLET_URL), normalizes/validates presence (non-empty), and exposes a safe getter the UI can consume (returning empty/undefined when not configured)."
+          "path": "frontend/DEPLOYMENT.md",
+          "operation": "modify",
+          "description": "Add an explicit verification step for the public canister URL on icp0.io (fresh/incognito) and a troubleshooting note explaining that older URLs (including `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`) may be superseded after a redeploy, and the correct URL must match the newly deployed frontend canister ID."
         },
         {
-          "path": "frontend/src/components/OisyWalletNavItem.tsx",
+          "path": "frontend/src/utils/deploymentInfo.ts",
           "operation": "modify",
-          "description": "Integrate the OISY wallet config utility so the nav item is disabled when the URL is missing/empty, and render a concise non-blocking English message (e.g., helper text in the menu) explaining the wallet link is not configured. Verify the component's usage instructions before implementing."
+          "description": "Harden URL/canister inference so the generated/diagnostic public URL is always normalized to `https://<frontend-canister-id>.icp0.io` when on mainnet, even if the app is accessed via `ic0.app` or a raw domain. Also ensure mismatch detection remains based on the canister ID inferred from the *currently accessed* hostname."
+        }
+      ]
+    },
+    {
+      "id": "REQ-33",
+      "summary": "Ensure Deployment Info correctly reports mainnet network, the actually-working shareable public URL, and a configured backend canister ID without false mismatch warnings.",
+      "acceptanceCriteria": [
+        "When the app is opened on mainnet, Deployment Info shows Network = \"Internet Computer (Mainnet)\".",
+        "Deployment Info shows a Shareable Public URL that matches the actually-working `https://[frontend-canister-id].icp0.io` URL.",
+        "Deployment Info shows a non-empty Backend Canister ID (not \"Not configured\").",
+        "No mismatch warning is shown (i.e., no remediation message about differing configured vs accessed frontend canister IDs)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/utils/deploymentInfo.ts",
+          "operation": "modify",
+          "description": "Fix/extend build-time configuration reading to avoid frontend canister ID/config mismatches: read the frontend canister ID from both `VITE_CANISTER_ID` (current) and `VITE_FRONTEND_CANISTER_ID` (documented), preferring the runtime-inferred canister ID on mainnet. Keep backend canister ID sourced from `VITE_BACKEND_CANISTER_ID`, and ensure the returned Network display value remains `ic` when running under IC domains."
+        },
+        {
+          "path": "frontend/src/components/DeploymentInfo.tsx",
+          "operation": "modify",
+          "description": "Adjust the Deployment Info UI to reflect the updated deploymentInfo logic: ensure the Shareable Public URL shown for mainnet matches the normalized icp0.io URL, and ensure the Backend Canister ID section clearly shows a non-empty configured value when present (and only shows warnings when truly missing). Verify the component's usage instructions before implementing."
         },
         {
           "path": "frontend/DEPLOYMENT.md",
           "operation": "modify",
-          "description": "Document the new frontend env var used to configure the OISY wallet link (e.g., VITE_OISY_WALLET_URL), including a brief note that the Wallet navigation item will be disabled and show a message when unset."
+          "description": "Align documentation with the actual environment variables supported by the app (include both `VITE_FRONTEND_CANISTER_ID` and `VITE_CANISTER_ID` as acceptable sources if applicable) and instruct how to confirm the backend canister ID is present in the in-app Deployment Info on mainnet."
         }
       ]
     }

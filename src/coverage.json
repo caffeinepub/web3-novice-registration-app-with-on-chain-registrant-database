@@ -1,40 +1,51 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T00:12:43.611Z",
+  "generatedAt": "2026-02-08T00:56:45.238Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
-        "id": "REQ-26",
-        "summary": "Add a user-facing entry point in the app header navigation (desktop + mobile menu) that lets authenticated users open their OISY wallet from within the app via an external link (new tab) with safe target/rel attributes.",
+        "id": "REQ-31",
+        "summary": "Re-run the Internet Computer deployment (`dfx deploy --network ic`) and capture the deployed frontend and backend canister IDs from the deployment output.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/OisyWalletNavItem.tsx",
-          "frontend/src/components/AppLayout.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/OisyWalletNavItem.tsx",
-          "frontend/src/components/AppLayout.tsx"
-        ]
-      },
-      {
-        "id": "REQ-27",
-        "summary": "Provide a configurable OISY wallet URL that the frontend uses for the wallet navigation link, and show a clear, non-blocking UI message if the URL is not configured.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/utils/oisyWallet.ts",
-          "frontend/src/components/OisyWalletNavItem.tsx",
           "frontend/DEPLOYMENT.md"
         ],
         "matchedFiles": [
-          "frontend/src/utils/oisyWallet.ts",
-          "frontend/src/components/OisyWalletNavItem.tsx",
+          "frontend/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "REQ-32",
+        "summary": "Verify the deployed frontend is reachable via its canister URL on icp0.io and does not show the gateway error “Canister ID Not Resolved”, specifically addressing the previously failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/DEPLOYMENT.md",
+          "frontend/src/utils/deploymentInfo.ts"
+        ],
+        "matchedFiles": [
+          "frontend/DEPLOYMENT.md",
+          "frontend/src/utils/deploymentInfo.ts"
+        ]
+      },
+      {
+        "id": "REQ-33",
+        "summary": "After deployment, use the in-app Deployment Info diagnostics to confirm there is no frontend canister/domain mismatch and that the backend canister ID is correctly configured/visible for mainnet usage.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/utils/deploymentInfo.ts",
+          "frontend/src/components/DeploymentInfo.tsx",
+          "frontend/DEPLOYMENT.md"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/deploymentInfo.ts",
+          "frontend/src/components/DeploymentInfo.tsx",
           "frontend/DEPLOYMENT.md"
         ]
       }
@@ -46,9 +57,8 @@
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/DEPLOYMENT.md",
-    "frontend/src/components/AppLayout.tsx",
-    "frontend/src/components/OisyWalletNavItem.tsx",
-    "frontend/src/utils/oisyWallet.ts",
+    "frontend/src/components/DeploymentInfo.tsx",
+    "frontend/src/utils/deploymentInfo.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

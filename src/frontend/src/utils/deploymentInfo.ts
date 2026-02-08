@@ -64,12 +64,16 @@ function inferFrontendCanisterIdFromHostname(): string | null {
 /**
  * Get deployment information from environment variables with runtime inference fallbacks
  * Provides robust configuration detection for mainnet deployments
+ * Supports both VITE_CANISTER_ID and VITE_FRONTEND_CANISTER_ID for frontend canister
  */
 export function getDeploymentInfo(): DeploymentInfo {
   // Read from Vite environment variables (build-time)
   const envNetwork = import.meta.env.VITE_DFX_NETWORK;
   const envBackendCanisterId = import.meta.env.VITE_BACKEND_CANISTER_ID;
-  const envFrontendCanisterId = import.meta.env.VITE_CANISTER_ID;
+  
+  // Support both VITE_CANISTER_ID and VITE_FRONTEND_CANISTER_ID
+  // Prefer VITE_FRONTEND_CANISTER_ID if both are present
+  const envFrontendCanisterId = import.meta.env.VITE_FRONTEND_CANISTER_ID || import.meta.env.VITE_CANISTER_ID;
   
   // Infer from runtime context when env vars are missing
   const inferredNetwork = inferNetworkFromHostname();
@@ -109,10 +113,10 @@ export function getDeploymentInfo(): DeploymentInfo {
     }
   }
   
-  // Derive public URL
+  // Derive public URL - always normalize to icp0.io for mainnet
   let publicUrl: string | null = null;
   if (network === 'ic' && frontendCanisterId) {
-    // Always use icp0.io for mainnet public URLs
+    // Always use icp0.io for mainnet public URLs (normalized)
     publicUrl = `https://${frontendCanisterId}.icp0.io`;
   } else if (typeof window !== 'undefined') {
     // For local or other networks, use current origin

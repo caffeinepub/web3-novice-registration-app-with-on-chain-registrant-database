@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-user-facing-entry-point-in-the-app-header-navigation-desktop-mobile-menu-that-lets-authenticated-users-open-their-oisy-wallet-from-within-the-app-via-an-external-link-new-tab-with-safe-target-rel-attributes",
-      "featureTitle": "Add a user-facing entry point in the app header navigation (desktop + mobile menu) that lets authenticated users open their OISY wallet from within the app via an external link (new tab) with safe target/rel attributes.",
+      "featureId": "feature-re-run-the-internet-computer-deployment-dfx-deploy-network-ic-and-capture-the-deployed-frontend-and-backend-canister-ids-from-the-deployment-output",
+      "featureTitle": "Re-run the Internet Computer deployment (`dfx deploy --network ic`) and capture the deployed frontend and backend canister IDs from the deployment output.",
       "files": [
-        "frontend/src/components/AppLayout.tsx",
-        "frontend/src/components/OisyWalletNavItem.tsx"
+        "frontend/DEPLOYMENT.md"
       ],
       "components": [
         "authorization@4.0.0",
@@ -17,17 +16,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-26"
+        "REQ-31"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-provide-a-configurable-oisy-wallet-url-that-the-frontend-uses-for-the-wallet-navigation-link-and-show-a-clear-non-blocking-ui-message-if-the-url-is-not-configured",
-      "featureTitle": "Provide a configurable OISY wallet URL that the frontend uses for the wallet navigation link, and show a clear, non-blocking UI message if the URL is not configured.",
+      "featureId": "feature-verify-the-deployed-frontend-is-reachable-via-its-canister-url-on-icp0-io-and-does-not-show-the-gateway-error-canister-id-not-resolved-specifically-addressing-the-previously-failing-url-https-5cpxd-piaaa-aaaap-qib3q-cai-icp0-io",
+      "featureTitle": "Verify the deployed frontend is reachable via its canister URL on icp0.io and does not show the gateway error “Canister ID Not Resolved”, specifically addressing the previously failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`.",
       "files": [
         "frontend/DEPLOYMENT.md",
-        "frontend/src/components/OisyWalletNavItem.tsx",
-        "frontend/src/utils/oisyWallet.ts"
+        "frontend/src/utils/deploymentInfo.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -38,7 +36,28 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-27"
+        "REQ-32"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-after-deployment-use-the-in-app-deployment-info-diagnostics-to-confirm-there-is-no-frontend-canister-domain-mismatch-and-that-the-backend-canister-id-is-correctly-configured-visible-for-mainnet-usage",
+      "featureTitle": "After deployment, use the in-app Deployment Info diagnostics to confirm there is no frontend canister/domain mismatch and that the backend canister ID is correctly configured/visible for mainnet usage.",
+      "files": [
+        "frontend/DEPLOYMENT.md",
+        "frontend/src/components/DeploymentInfo.tsx",
+        "frontend/src/utils/deploymentInfo.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-33"
       ],
       "confidence": "high"
     }

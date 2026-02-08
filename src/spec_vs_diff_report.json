@@ -1,42 +1,67 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T00:12:43.608Z",
-  "summary": "REQ-27 appears implemented via a single frontend config point (VITE_OISY_WALLET_URL) and safe handling when missing. REQ-26 is partially evidenced: the desktop header nav includes the wallet item; mobile-menu inclusion is not clearly shown in the provided truncated diff, though a mobile-capable component was added.",
+  "generatedAt": "2026-02-08T00:56:45.235Z",
+  "summary": "Diff adds/enhances frontend deployment diagnostics (runtime inference of network/canister ID, mismatch detection UI) and a DEPLOYMENT.md guide, but does not provide evidence of an actual IC redeploy, recorded canister IDs, or verified reachable mainnet URL outcomes requested in REQ-31/32/33.",
   "missing_requirements": [
     {
-      "id": "REQ-26",
-      "requirement": "Show the Wallet/OISY Wallet navigation item in both the header navigation and the mobile menu for authenticated users.",
-      "reason": "The diff shows <OisyWalletNavItem /> added to the desktop header <nav className=\"hidden md:flex ...\">, and the new component supports an isMobile mode, but the provided AppLayout.tsx snippet is truncated before any mobile menu content is shown, so mobile-menu wiring cannot be confirmed from the evidence.",
+      "id": "REQ-31",
+      "requirement": "Re-run `dfx deploy --network ic` and capture the deployed frontend and backend canister IDs from the deployment output.",
+      "reason": "The diff contains only code/docs changes; there is no deployment output, no recorded canister IDs, and no indication that `dfx deploy --network ic` was executed successfully.",
       "evidence": [
-        "frontend/src/components/AppLayout.tsx",
-        "frontend/src/components/OisyWalletNavItem.tsx"
+        "frontend/DEPLOYMENT.md",
+        "frontend/src/utils/deploymentInfo.ts",
+        "frontend/src/components/DeploymentInfo.tsx"
+      ]
+    },
+    {
+      "id": "REQ-32",
+      "requirement": "Verify the deployed frontend is reachable via its canister URL on icp0.io and does not show “Canister ID Not Resolved”, addressing the previously failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`.",
+      "reason": "No runtime verification results or remediation of the specific previously failing URL are shown in the diff; only diagnostic tooling/documentation was added.",
+      "evidence": [
+        "frontend/DEPLOYMENT.md"
+      ]
+    },
+    {
+      "id": "REQ-33",
+      "requirement": "After deployment, use the in-app Deployment Info diagnostics to confirm no frontend canister/domain mismatch and that the backend canister ID is correctly configured/visible for mainnet usage.",
+      "reason": "The diff updates the diagnostics UI/logic, but provides no evidence of an actual mainnet session confirmation (Network label, shareable URL match, backend canister ID not empty, and no mismatch warning).",
+      "evidence": [
+        "frontend/src/components/DeploymentInfo.tsx",
+        "frontend/src/utils/deploymentInfo.ts",
+        "frontend/DEPLOYMENT.md"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Global canister ID mismatch warning banner with \"Open Correct URL\" behavior in the app layout header.",
-      "reason": "Not requested by REQ-26/REQ-27; this introduces additional deployment/mismatch detection UI unrelated to adding an OISY wallet navigation entry point and configurable URL handling.",
+      "description": "Added/expanded mismatch detection UI with destructive alert and remediation actions (e.g., “Correct Public URL”, open/copy).",
+      "reason": "BuildRequest focuses on deploying and confirming no mismatch warning is shown after deployment; it does not explicitly request adding new mismatch remediation UI flows (open/copy buttons, destructive alert panel).",
       "evidence": [
-        "frontend/src/components/AppLayout.tsx"
+        "frontend/src/components/DeploymentInfo.tsx"
       ]
     },
     {
-      "description": "Expanded deployment documentation focusing on environment inference, mismatch detection/remediation, and Deployment Info as source of truth.",
-      "reason": "Not requested by REQ-26/REQ-27; this adds extensive deployment guidance beyond configuring an OISY wallet link URL.",
+      "description": "Runtime inference system for network/canister ID (icp0.io/ic0.app/raw domains) and normalized URL generation logic.",
+      "reason": "BuildRequest asks to redeploy and verify reachability/config; it does not explicitly request implementing inference heuristics or supporting multiple env var names (e.g., VITE_CANISTER_ID vs VITE_FRONTEND_CANISTER_ID).",
+      "evidence": [
+        "frontend/src/utils/deploymentInfo.ts"
+      ]
+    },
+    {
+      "description": "Added a comprehensive standalone deployment guide with checklists and templates.",
+      "reason": "BuildRequest requests performing and recording an actual deployment/verification, not adding new documentation artifacts.",
       "evidence": [
         "frontend/DEPLOYMENT.md"
       ]
     }
   ],
-  "confidence": 0.62,
+  "confidence": 0.74,
   "changed_files": [
     "frontend-file-summaries.txt",
     "frontend/DEPLOYMENT.md",
-    "frontend/src/components/AppLayout.tsx",
-    "frontend/src/components/OisyWalletNavItem.tsx",
-    "frontend/src/utils/oisyWallet.ts",
+    "frontend/src/components/DeploymentInfo.tsx",
+    "frontend/src/utils/deploymentInfo.ts",
     "project_state.json"
   ]
 }

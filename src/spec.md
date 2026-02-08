@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Let authenticated users open their OISY wallet from within the app via a safe external link in the header navigation.
+**Goal:** Restore a working Internet Computer (mainnet) deployment by re-running `dfx deploy --network ic`, capturing the new canister IDs, and confirming the frontend URL is reachable without gateway resolution errors.
 
 **Planned changes:**
-- Add a “Wallet” / “OISY Wallet” entry point to the header navigation and mobile menu that is shown for authenticated users and opens the OISY wallet in a new tab with safe `target`/`rel` attributes.
-- For unauthenticated users, hide the wallet item or show a disabled/locked state with English text prompting the user to sign in first.
-- Add a single frontend configuration point for the OISY wallet URL and disable the wallet action with a concise, non-blocking English message when the URL is missing/empty.
+- Re-run `dfx deploy --network ic` and record the deployed frontend and backend canister IDs from the deployment output.
+- Verify the deployed frontend loads successfully at `https://[frontend-canister-id].icp0.io/` and does not show “Canister ID Not Resolved”, including addressing the previously failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`.
+- Use the app’s Deployment Info diagnostics on mainnet to confirm the correct network, matching shareable public URL, and a configured (non-empty) backend canister ID with no mismatch warning.
 
-**User-visible outcome:** Signed-in users can click “Wallet” in the app navigation to open the OISY wallet in a new tab; if not signed in (or if the wallet URL isn’t configured), the UI clearly indicates what to do without breaking existing flows.
+**User-visible outcome:** The app is accessible via the correct `icp0.io` canister URL on mainnet, and Deployment Info accurately reflects the active frontend URL and backend canister ID without mismatch errors.

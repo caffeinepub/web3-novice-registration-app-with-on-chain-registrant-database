@@ -152,7 +152,7 @@ export default function DeploymentInfo() {
             {deploymentInfo.publicUrl && (
               <div>
                 <label className="text-xs font-medium text-muted-foreground">
-                  {deploymentInfo.network === 'ic' ? 'Shareable Public URL' : 'Public URL'}
+                  {deploymentInfo.network === 'ic' ? 'Shareable Public URL (icp0.io)' : 'Public URL'}
                 </label>
                 <div className="flex items-center justify-between gap-2 mt-1">
                   <a
@@ -210,7 +210,7 @@ export default function DeploymentInfo() {
             <div>
               <label className="text-xs font-medium text-muted-foreground">Backend Canister ID</label>
               <div className="flex items-center justify-between gap-2 mt-1">
-                <span className="text-sm font-mono truncate flex-1">
+                <span className={`text-sm font-mono truncate flex-1 ${!deploymentInfo.backendCanisterId && deploymentInfo.network === 'ic' ? 'text-amber-600 dark:text-amber-400' : ''}`}>
                   {formatCanisterId(deploymentInfo.backendCanisterId)}
                 </span>
                 {deploymentInfo.backendCanisterId && (
@@ -219,7 +219,7 @@ export default function DeploymentInfo() {
               </div>
               {!deploymentInfo.backendCanisterId && deploymentInfo.network === 'ic' && (
                 <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
-                  Backend canister ID not available. Check build configuration or deployment logs.
+                  ⚠ Backend canister ID not configured. Check VITE_BACKEND_CANISTER_ID in build environment.
                 </p>
               )}
             </div>
@@ -241,7 +241,7 @@ export default function DeploymentInfo() {
               )}
               {!deploymentInfo.backendCanisterId && (
                 <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">
-                  <strong>Note:</strong> Backend canister ID is missing. If you experience authentication or data issues, ensure the backend was deployed and environment variables were set during build.
+                  <strong>Note:</strong> Backend canister ID is missing. If you experience authentication or data issues, ensure the backend was deployed and VITE_BACKEND_CANISTER_ID was set during build.
                 </p>
               )}
             </div>

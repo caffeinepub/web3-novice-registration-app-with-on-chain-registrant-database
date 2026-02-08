@@ -1,15 +1,18 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 21,
+  "projectStateVersion": 25,
   "summary": "Build a beginner-friendly ICP/Web3 onboarding web app that creates a user ID and badge on first login, maintains a registrant database, and links to an external Web2 site describing the ICP real-world network initiative (with an events/coming-soon page for next steps).",
   "architectural_notes": [
-    "Plan a new 'Planet/Digital World' visualization page that reflects registrant count in real time and adds a new visible 'inhabitant' representation for each new registrant."
+    "Plan a new 'Planet/Digital World' visualization page that reflects registrant count in real time and adds a new visible 'inhabitant' representation for each new registrant.",
+    "Configure the OISY wallet URL to open https://oisy.com (avoid 'Wallet link is not configured' warning).",
+    "Define how the points system is managed 'with my profile' (e.g., self-managed vs admin/allowlisted management) and where the UI lives in the profile page."
   ],
   "known_issues": [
     "Deployment/publish-to-live step failed previously (“publish step hit a snag” / build error); user requested retry.",
-    "Live frontend URL https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io returns “Canister ID Not Resolved” (gateway can’t resolve destination canister), suggesting deployment did not actually succeed or canister/domain mapping is missing."
+    "Live frontend URL https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io returns “Canister ID Not Resolved” (gateway can’t resolve destination canister), suggesting deployment did not actually succeed or canister/domain mapping is missing.",
+    "OISY wallet link shows 'Wallet link is not configured' because the wallet URL is not set."
   ],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-implement-internet-identity-authentication-so-users-can-sign-in-out-and-the-app-can-associate-a-registrant-record-with-the-signed-in-principal",
@@ -194,6 +197,46 @@
         "REQ-27"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-configure-the-oisy-wallet-navigation-item-so-that-it-opens-https-oisy-com-for-authenticated-users-and-no-longer-shows-the-tooltip-message-wallet-link-is-not-configured-in-the-default-deployment",
+      "title": "Configure the OISY wallet navigation item so that it opens `https://oisy.com` for authenticated users and no longer shows the tooltip message \"Wallet link is not configured\" in the default deployment.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-expose-the-points-system-in-the-frontend-profile-registration-area-so-an-authenticated-user-can-view-and-manage-their-points-from-their-own-profile",
+      "title": "Expose the points system in the frontend profile/registration area so an authenticated user can view and manage their points from their own profile.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-re-run-the-internet-computer-deployment-dfx-deploy-network-ic-and-capture-the-deployed-frontend-and-backend-canister-ids-from-the-deployment-output",
+      "title": "Re-run the Internet Computer deployment (`dfx deploy --network ic`) and capture the deployed frontend and backend canister IDs from the deployment output.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-the-deployed-frontend-is-reachable-via-its-canister-url-on-icp0-io-and-does-not-show-the-gateway-error-canister-id-not-resolved-specifically-addressing-the-previously-failing-url-https-5cpxd-piaaa-aaaap-qib3q-cai-icp0-io",
+      "title": "Verify the deployed frontend is reachable via its canister URL on icp0.io and does not show the gateway error “Canister ID Not Resolved”, specifically addressing the previously failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-after-deployment-use-the-in-app-deployment-info-diagnostics-to-confirm-there-is-no-frontend-canister-domain-mismatch-and-that-the-backend-canister-id-is-correctly-configured-visible-for-mainnet-usage",
+      "title": "After deployment, use the in-app Deployment Info diagnostics to confirm there is no frontend canister/domain mismatch and that the backend canister ID is correctly configured/visible for mainnet usage.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -275,6 +318,20 @@
       "id": "AR-13",
       "summary": "Allow users to access their OISY wallet from within the app (OISY wallet integration / deep link / embedded access flow).",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Add a points system that can be managed from the user's profile (ability to view and manage points).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Add a backend points system tied to the authenticated principal, including APIs to read and update the caller’s points, so points can be managed from the user’s profile.",
+      "reqIds": [
+        "REQ-29"
+      ],
       "status": "pending"
     }
   ],

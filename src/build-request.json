@@ -1,58 +1,84 @@
 {
   "kind": "build_request",
-  "title": "Add in-app access flow to the OISY wallet",
-  "priority": "normal",
+  "title": "Retry IC deployment and restore reachable frontend URL",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-26",
-      "text": "Add a user-facing entry point in the app header navigation (desktop + mobile menu) that lets authenticated users open their OISY wallet from within the app via an external link (new tab) with safe target/rel attributes.",
-      "target": "frontend",
+      "id": "REQ-31",
+      "text": "Re-run the Internet Computer deployment (`dfx deploy --network ic`) and capture the deployed frontend and backend canister IDs from the deployment output.",
+      "target": "unknown",
       "source": {
         "messageIds": [
-          "recent-messages-6"
+          "msg-1"
         ],
         "quotes": [
-          "je veux que mes utilisateurs puissent accèder à leur wallet OISY via mon app"
+          "retry"
         ]
       },
       "acceptanceCriteria": [
-        "When the user is authenticated, a \"Wallet\" (or \"OISY Wallet\") navigation item is visible in the header navigation and in the mobile menu.",
-        "Clicking the navigation item opens the OISY wallet in a new browser tab/window using target=\"_blank\" and rel=\"noopener noreferrer\".",
-        "When the user is not authenticated, the wallet navigation item is either hidden or replaced with a disabled/locked state that clearly prompts the user to sign in first (English UI text).",
-        "No changes are made to immutable frontend paths listed in SYSTEM_CONTEXT (compose existing UI components instead)."
+        "A new `dfx deploy --network ic` completes successfully for both backend and frontend canisters.",
+        "The exact deployed canister IDs are recorded from the deploy output (frontend canister ID and backend canister ID)."
       ]
     },
     {
-      "id": "REQ-27",
-      "text": "Provide a configurable OISY wallet URL that the frontend uses for the wallet navigation link, and show a clear, non-blocking UI message if the URL is not configured.",
-      "target": "frontend",
+      "id": "REQ-32",
+      "text": "Verify the deployed frontend is reachable via its canister URL on icp0.io and does not show the gateway error “Canister ID Not Resolved”, specifically addressing the previously failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`.",
+      "target": "unknown",
       "source": {
         "messageIds": [
-          "recent-messages-6"
+          "msg-1"
         ],
         "quotes": [
-          "je veux que mes utilisateurs puissent accèder à leur wallet OISY via mon app"
+          "retry"
         ]
       },
       "acceptanceCriteria": [
-        "The wallet link URL is configurable via a single frontend configuration point (e.g., an environment variable) without requiring backend changes.",
-        "If the wallet URL is missing/empty, the UI does not crash; the wallet action is disabled and a concise English message explains that the wallet link is not configured.",
-        "Default app flows (registration, directory browsing, world page) continue to work unchanged when the wallet URL is not configured."
+        "Opening the new deployed frontend public URL `https://[frontend-canister-id].icp0.io/` loads the app successfully in a fresh/incognito browser session.",
+        "The previously reported failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io` is either confirmed as no longer the active deployment URL (superseded by the new frontend canister ID) or is remediated so it resolves correctly.",
+        "No “Canister ID Not Resolved” gateway error occurs for the correct deployed frontend URL."
+      ]
+    },
+    {
+      "id": "REQ-33",
+      "text": "After deployment, use the in-app Deployment Info diagnostics to confirm there is no frontend canister/domain mismatch and that the backend canister ID is correctly configured/visible for mainnet usage.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "retry"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When the app is opened on mainnet, Deployment Info shows Network = \"Internet Computer (Mainnet)\".",
+        "Deployment Info shows a Shareable Public URL that matches the actually-working `https://[frontend-canister-id].icp0.io` URL.",
+        "Deployment Info shows a non-empty Backend Canister ID (not \"Not configured\").",
+        "No mismatch warning is shown (i.e., no remediation message about differing configured vs accessed frontend canister IDs)."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor (no additional backend services).",
-    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or any files under frontend/src/components/ui; compose them instead.",
-    "Do not add unsupported wallet integrations (e.g., MetaMask/WalletConnect)."
+    "Backend must remain a single Motoko actor in `backend/main.mo`; only add `backend/migration.mo` if an upgrade requires state migration.",
+    "Do not edit frontend files under immutable paths: `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`, `frontend/src/components/ui`.",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Embedding the OISY wallet inside an iframe with transaction signing inside this app.",
-    "Implementing new backend APIs for wallet balances/transactions.",
-    "Adding any third-party authentication system beyond Internet Identity."
+    "Adding new application features unrelated to deployment verification/remediation.",
+    "Changing the registrant/profile/badge data model or application behavior unless required to make `dfx deploy --network ic` succeed and the deployed URL reachable."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

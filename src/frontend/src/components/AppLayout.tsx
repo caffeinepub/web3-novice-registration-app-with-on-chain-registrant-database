@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import DeploymentInfo from './DeploymentInfo';
 import { getDeploymentInfo } from '../utils/deploymentInfo';
-import OisyWalletNavItem from './OisyWalletNavItem';
 
 export default function AppLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -91,7 +90,6 @@ export default function AppLayout() {
               >
                 Events
               </Link>
-              <OisyWalletNavItem />
               <a 
                 href="https://www.dmc-technologies.fr" 
                 target="_blank" 
@@ -190,7 +188,6 @@ export default function AppLayout() {
               >
                 Events
               </Link>
-              <OisyWalletNavItem isMobile onNavigate={() => setMobileMenuOpen(false)} />
               <a 
                 href="https://www.dmc-technologies.fr" 
                 target="_blank" 

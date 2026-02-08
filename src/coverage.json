@@ -1,64 +1,88 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T00:56:45.238Z",
+  "generatedAt": "2026-02-08T01:07:32.904Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 5,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-31",
-        "summary": "Re-run the Internet Computer deployment (`dfx deploy --network ic`) and capture the deployed frontend and backend canister IDs from the deployment output.",
+        "id": "REQ-34",
+        "summary": "Remove the in-app wallet entry point from the application navigation (desktop header nav and mobile menu) so users no longer see any Wallet/OISY Wallet item, and ensure there is no remaining user-facing wallet-related UI text or tooltip in the app navigation.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/DEPLOYMENT.md"
+          "frontend/src/components/AppLayout.tsx"
         ],
         "matchedFiles": [
-          "frontend/DEPLOYMENT.md"
+          "frontend/src/components/AppLayout.tsx"
         ]
       },
       {
-        "id": "REQ-32",
-        "summary": "Verify the deployed frontend is reachable via its canister URL on icp0.io and does not show the gateway error “Canister ID Not Resolved”, specifically addressing the previously failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`.",
+        "id": "REQ-35",
+        "summary": "Remove unused OISY wallet configuration usage from the frontend so the app does not depend on or reference the OISY wallet URL environment variable (VITE_OISY_WALLET_URL) for any UI behavior.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/DEPLOYMENT.md",
-          "frontend/src/utils/deploymentInfo.ts"
+          "frontend/src/components/OisyWalletNavItem.tsx",
+          "frontend/src/utils/oisyWallet.ts",
+          "frontend/src/components/AppLayout.tsx"
         ],
         "matchedFiles": [
-          "frontend/DEPLOYMENT.md",
-          "frontend/src/utils/deploymentInfo.ts"
+          "frontend/src/components/OisyWalletNavItem.tsx",
+          "frontend/src/utils/oisyWallet.ts",
+          "frontend/src/components/AppLayout.tsx"
         ]
       },
       {
-        "id": "REQ-33",
-        "summary": "After deployment, use the in-app Deployment Info diagnostics to confirm there is no frontend canister/domain mismatch and that the backend canister ID is correctly configured/visible for mainnet usage.",
+        "id": "REQ-36",
+        "summary": "Extend the backend registrant data model and APIs to support saving the following optional fields for each registrant: Facebook, Instagram, Telegram, website URL, and a crypto address, and persist these values in the registrant record returned by existing registrant read/list/search APIs.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-37",
+        "summary": "Update the registration/profile form UI to allow authenticated users to input and save optional social links (Facebook, Instagram, Telegram, website) and an optional crypto address as part of their registrant profile, without making these fields required.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/utils/deploymentInfo.ts",
-          "frontend/src/components/DeploymentInfo.tsx",
-          "frontend/DEPLOYMENT.md"
+          "frontend/src/pages/RegistrationPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/utils/deploymentInfo.ts",
-          "frontend/src/components/DeploymentInfo.tsx",
-          "frontend/DEPLOYMENT.md"
+          "frontend/src/pages/RegistrationPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-38",
+        "summary": "Update the directory UI to display a registrant’s social links (Facebook, Instagram, Telegram, website) and crypto address when present, and hide each field when it is not provided.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DirectoryPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DirectoryPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/DEPLOYMENT.md",
-    "frontend/src/components/DeploymentInfo.tsx",
-    "frontend/src/utils/deploymentInfo.ts",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/AppLayout.tsx",
+    "frontend/src/components/OisyWalletNavItem.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/pages/DirectoryPage.tsx",
+    "frontend/src/pages/RegistrationPage.tsx",
+    "frontend/src/utils/oisyWallet.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

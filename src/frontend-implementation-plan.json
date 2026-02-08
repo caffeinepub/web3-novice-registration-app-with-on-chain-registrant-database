@@ -1,68 +1,79 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Mainnet deployment diagnostics and URL/canister ID mismatch remediation (frontend-only)",
+  "title": "Remove wallet navigation and add social/crypto fields to registrant profile UI",
   "requirements": [
     {
-      "id": "REQ-31",
-      "summary": "Add a documented, repeatable way to capture and record the deployed frontend/backend canister IDs after an IC deployment.",
+      "id": "REQ-34",
+      "summary": "Remove all Wallet/OISY Wallet navigation entry points from desktop header nav and mobile menu, including any wallet-related tooltip/disabled messaging in navigation.",
       "acceptanceCriteria": [
-        "A new `dfx deploy --network ic` completes successfully for both backend and frontend canisters.",
-        "The exact deployed canister IDs are recorded from the deploy output (frontend canister ID and backend canister ID)."
+        "The header navigation no longer renders the wallet navigation item on desktop.",
+        "The mobile menu no longer renders the wallet navigation item.",
+        "No wallet-related tooltip/disabled state messaging is shown anywhere in the navigation."
       ],
       "file_operations": [
         {
-          "path": "frontend/DEPLOYMENT.md",
+          "path": "frontend/src/components/AppLayout.tsx",
           "operation": "modify",
-          "description": "Update the deployment guide to include a clearly labeled section/template for recording the *exact* deployed frontend and backend canister IDs copied from `dfx deploy --network ic` output, plus the resulting public URL. Emphasize copying values verbatim from deploy output and storing them for later verification."
+          "description": "Remove import and rendering of the wallet navigation item from both the desktop nav and the mobile menu so no wallet UI text/tooltips appear in navigation."
         }
       ]
     },
     {
-      "id": "REQ-32",
-      "summary": "Improve mainnet reachability verification guidance and ensure in-app diagnostics normalize/validate the active canister URL (icp0.io) to avoid “Canister ID Not Resolved” confusion.",
+      "id": "REQ-35",
+      "summary": "Remove unused OISY wallet configuration usage from the frontend so the app no longer references VITE_OISY_WALLET_URL or attempts to open an OISY wallet URL.",
       "acceptanceCriteria": [
-        "Opening the new deployed frontend public URL `https://[frontend-canister-id].icp0.io/` loads the app successfully in a fresh/incognito browser session.",
-        "The previously reported failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io` is either confirmed as no longer the active deployment URL (superseded by the new frontend canister ID) or is remediated so it resolves correctly.",
-        "No “Canister ID Not Resolved” gateway error occurs for the correct deployed frontend URL."
+        "The frontend builds without referencing OISY wallet URL configuration for navigation.",
+        "No runtime code paths attempt to open an OISY wallet URL."
       ],
       "file_operations": [
         {
-          "path": "frontend/DEPLOYMENT.md",
-          "operation": "modify",
-          "description": "Add an explicit verification step for the public canister URL on icp0.io (fresh/incognito) and a troubleshooting note explaining that older URLs (including `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`) may be superseded after a redeploy, and the correct URL must match the newly deployed frontend canister ID."
+          "path": "frontend/src/components/OisyWalletNavItem.tsx",
+          "operation": "delete",
+          "description": "Delete the wallet navigation component to eliminate all remaining UI and runtime behavior that reads wallet configuration or opens the wallet URL."
         },
         {
-          "path": "frontend/src/utils/deploymentInfo.ts",
+          "path": "frontend/src/utils/oisyWallet.ts",
+          "operation": "delete",
+          "description": "Delete the OISY wallet URL helper to remove all runtime references to VITE_OISY_WALLET_URL from the codebase."
+        },
+        {
+          "path": "frontend/src/components/AppLayout.tsx",
           "operation": "modify",
-          "description": "Harden URL/canister inference so the generated/diagnostic public URL is always normalized to `https://<frontend-canister-id>.icp0.io` when on mainnet, even if the app is accessed via `ic0.app` or a raw domain. Also ensure mismatch detection remains based on the canister ID inferred from the *currently accessed* hostname."
+          "description": "Ensure any leftover imports/usages of OisyWalletNavItem (and any related wallet config helpers) are removed so the bundle no longer includes wallet configuration code."
         }
       ]
     },
     {
-      "id": "REQ-33",
-      "summary": "Ensure Deployment Info correctly reports mainnet network, the actually-working shareable public URL, and a configured backend canister ID without false mismatch warnings.",
+      "id": "REQ-37",
+      "summary": "Extend the registration/profile form UI with optional inputs for Facebook, Instagram, Telegram, Website, and Crypto address; save and pre-fill these fields from the registrant record.",
       "acceptanceCriteria": [
-        "When the app is opened on mainnet, Deployment Info shows Network = \"Internet Computer (Mainnet)\".",
-        "Deployment Info shows a Shareable Public URL that matches the actually-working `https://[frontend-canister-id].icp0.io` URL.",
-        "Deployment Info shows a non-empty Backend Canister ID (not \"Not configured\").",
-        "No mismatch warning is shown (i.e., no remediation message about differing configured vs accessed frontend canister IDs)."
+        "The registration page includes new optional inputs labeled in English: “Facebook”, “Instagram”, “Telegram”, “Website”, and “Crypto address”.",
+        "Submitting the form saves these values to the backend along with existing registrant fields.",
+        "When revisiting the registration page, previously saved values for these fields are pre-filled from the existing registrant record.",
+        "Leaving these fields empty does not block submission."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/utils/deploymentInfo.ts",
+          "path": "frontend/src/pages/RegistrationPage.tsx",
           "operation": "modify",
-          "description": "Fix/extend build-time configuration reading to avoid frontend canister ID/config mismatches: read the frontend canister ID from both `VITE_CANISTER_ID` (current) and `VITE_FRONTEND_CANISTER_ID` (documented), preferring the runtime-inferred canister ID on mainnet. Keep backend canister ID sourced from `VITE_BACKEND_CANISTER_ID`, and ensure the returned Network display value remains `ic` when running under IC domains."
-        },
+          "description": "Add optional form state and inputs for facebook/instagram/telegram/website/cryptoAddress (English labels), prefill them from the existing registrant data when available, and include them in the registrant payload when saving without adding required validation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-38",
+      "summary": "Update directory cards to conditionally display a registrant’s social links (Facebook, Instagram, Telegram, Website) and crypto address only when provided.",
+      "acceptanceCriteria": [
+        "Directory cards conditionally render each social link field only if it exists for that registrant.",
+        "Directory cards conditionally render the crypto address only if it exists for that registrant.",
+        "The directory page remains usable and visually consistent when none of the optional fields are present for a registrant."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/components/DeploymentInfo.tsx",
+          "path": "frontend/src/pages/DirectoryPage.tsx",
           "operation": "modify",
-          "description": "Adjust the Deployment Info UI to reflect the updated deploymentInfo logic: ensure the Shareable Public URL shown for mainnet matches the normalized icp0.io URL, and ensure the Backend Canister ID section clearly shows a non-empty configured value when present (and only shows warnings when truly missing). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/DEPLOYMENT.md",
-          "operation": "modify",
-          "description": "Align documentation with the actual environment variables supported by the app (include both `VITE_FRONTEND_CANISTER_ID` and `VITE_CANISTER_ID` as acceptable sources if applicable) and instruct how to confirm the backend canister ID is present in the in-app Deployment Info on mainnet."
+          "description": "Extend the registrant card UI to render Facebook/Instagram/Telegram/Website/Crypto address sections only when the corresponding optional fields exist on the registrant record, keeping layout consistent when absent."
         }
       ]
     }

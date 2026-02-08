@@ -1,11 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Restore a working Internet Computer (mainnet) deployment by re-running `dfx deploy --network ic`, capturing the new canister IDs, and confirming the frontend URL is reachable without gateway resolution errors.
+**Goal:** Remove the in-app wallet navigation entry point and allow registrants to save and display optional social links and a crypto address.
 
 **Planned changes:**
-- Re-run `dfx deploy --network ic` and record the deployed frontend and backend canister IDs from the deployment output.
-- Verify the deployed frontend loads successfully at `https://[frontend-canister-id].icp0.io/` and does not show “Canister ID Not Resolved”, including addressing the previously failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`.
-- Use the app’s Deployment Info diagnostics on mainnet to confirm the correct network, matching shareable public URL, and a configured (non-empty) backend canister ID with no mismatch warning.
+- Remove any Wallet/OISY Wallet navigation items and related wallet messaging from the desktop header nav and mobile menu.
+- Remove unused frontend references/dependencies on the OISY wallet URL configuration (VITE_OISY_WALLET_URL).
+- Extend the backend registrant model and existing create/read/list/search APIs to store and return optional fields: Facebook, Instagram, Telegram, website URL, and crypto address.
+- Update the registration/profile form to include optional inputs for “Facebook”, “Instagram”, “Telegram”, “Website”, and “Crypto address”, saved with the registrant record and pre-filled when revisiting.
+- Update the directory UI to conditionally display each social link and crypto address only when present, staying visually consistent when absent.
 
-**User-visible outcome:** The app is accessible via the correct `icp0.io` canister URL on mainnet, and Deployment Info accurately reflects the active frontend URL and backend canister ID without mismatch errors.
+**User-visible outcome:** Users no longer see any in-app wallet navigation entry, and they can optionally add social links and a crypto address to their profile which will appear in the directory when provided.

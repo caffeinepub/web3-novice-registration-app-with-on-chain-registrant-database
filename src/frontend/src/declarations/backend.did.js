@@ -10,10 +10,15 @@ import { IDL } from '@icp-sdk/core/candid';
 
 export const Registrant = IDL.Record({
   'id' : IDL.Text,
+  'cryptoAddress' : IDL.Opt(IDL.Text),
   'interests' : IDL.Vec(IDL.Text),
+  'instagram' : IDL.Opt(IDL.Text),
   'name' : IDL.Text,
   'email' : IDL.Text,
+  'website' : IDL.Opt(IDL.Text),
+  'facebook' : IDL.Opt(IDL.Text),
   'skillLevel' : IDL.Text,
+  'telegram' : IDL.Opt(IDL.Text),
 });
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
@@ -54,10 +59,15 @@ export const idlInitArgs = [];
 export const idlFactory = ({ IDL }) => {
   const Registrant = IDL.Record({
     'id' : IDL.Text,
+    'cryptoAddress' : IDL.Opt(IDL.Text),
     'interests' : IDL.Vec(IDL.Text),
+    'instagram' : IDL.Opt(IDL.Text),
     'name' : IDL.Text,
     'email' : IDL.Text,
+    'website' : IDL.Opt(IDL.Text),
+    'facebook' : IDL.Opt(IDL.Text),
     'skillLevel' : IDL.Text,
+    'telegram' : IDL.Opt(IDL.Text),
   });
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,

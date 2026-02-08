@@ -12,10 +12,15 @@ import type { Principal } from '@icp-sdk/core/principal';
 
 export interface Registrant {
   'id' : string,
+  'cryptoAddress' : [] | [string],
   'interests' : Array<string>,
+  'instagram' : [] | [string],
   'name' : string,
   'email' : string,
+  'website' : [] | [string],
+  'facebook' : [] | [string],
   'skillLevel' : string,
+  'telegram' : [] | [string],
 }
 export interface UserBadge {
   'principal' : Principal,

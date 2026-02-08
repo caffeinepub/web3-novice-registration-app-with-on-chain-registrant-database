@@ -17,7 +17,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Search, Users, Loader2, Trash2, AlertCircle } from 'lucide-react';
+import { Search, Users, Loader2, Trash2, AlertCircle, ExternalLink, Wallet } from 'lucide-react';
+import { SiFacebook, SiInstagram, SiTelegram } from 'react-icons/si';
 import { toast } from 'sonner';
 
 const SKILL_LEVELS = ['All Levels', 'Beginner', 'Intermediate', 'Advanced'];
@@ -168,6 +169,72 @@ export default function DirectoryPage() {
                               {interest}
                             </Badge>
                           ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Social Media Links */}
+                    {(registrant.facebook || registrant.instagram || registrant.telegram || registrant.website) && (
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-2">Connect</p>
+                        <div className="flex flex-wrap gap-2">
+                          {registrant.facebook && (
+                            <a
+                              href={registrant.facebook.startsWith('http') ? registrant.facebook : `https://facebook.com/${registrant.facebook}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                            >
+                              <SiFacebook className="h-3 w-3" />
+                              Facebook
+                            </a>
+                          )}
+                          {registrant.instagram && (
+                            <a
+                              href={registrant.instagram.startsWith('http') ? registrant.instagram : `https://instagram.com/${registrant.instagram}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md bg-pink-100 text-pink-700 hover:bg-pink-200 transition-colors"
+                            >
+                              <SiInstagram className="h-3 w-3" />
+                              Instagram
+                            </a>
+                          )}
+                          {registrant.telegram && (
+                            <a
+                              href={registrant.telegram.startsWith('http') ? registrant.telegram : `https://t.me/${registrant.telegram}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md bg-sky-100 text-sky-700 hover:bg-sky-200 transition-colors"
+                            >
+                              <SiTelegram className="h-3 w-3" />
+                              Telegram
+                            </a>
+                          )}
+                          {registrant.website && (
+                            <a
+                              href={registrant.website.startsWith('http') ? registrant.website : `https://${registrant.website}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              Website
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Crypto Address */}
+                    {registrant.cryptoAddress && (
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-1">Crypto address</p>
+                        <div className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-amber-50 border border-amber-200">
+                          <Wallet className="h-3 w-3 text-amber-700 flex-shrink-0" />
+                          <p className="text-xs font-mono text-amber-900 break-all">
+                            {registrant.cryptoAddress}
+                          </p>
                         </div>
                       </div>
                     )}

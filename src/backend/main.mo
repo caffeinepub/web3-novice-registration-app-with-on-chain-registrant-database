@@ -5,8 +5,11 @@ import Text "mo:core/Text";
 import Iter "mo:core/Iter";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import Migration "migration";
 
 // Live implementation, already deployed to the IC
+// Add migration clause:
+(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -17,6 +20,11 @@ actor {
     email : Text;
     skillLevel : Text;
     interests : [Text];
+    facebook : ?Text;
+    instagram : ?Text;
+    telegram : ?Text;
+    website : ?Text;
+    cryptoAddress : ?Text;
   };
 
   public type UserProfile = {

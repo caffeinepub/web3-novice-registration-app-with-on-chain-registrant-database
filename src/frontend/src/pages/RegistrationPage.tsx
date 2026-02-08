@@ -34,6 +34,11 @@ export default function RegistrationPage() {
   const [skillLevel, setSkillLevel] = useState('');
   const [interests, setInterests] = useState<string[]>([]);
   const [bio, setBio] = useState('');
+  const [facebook, setFacebook] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [telegram, setTelegram] = useState('');
+  const [website, setWebsite] = useState('');
+  const [cryptoAddress, setCryptoAddress] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -44,6 +49,11 @@ export default function RegistrationPage() {
       setSkillLevel(existingRegistrant.data.skillLevel);
       setInterests(existingRegistrant.data.interests);
       setBio(existingRegistrant.data.id); // Using id field for bio
+      setFacebook(existingRegistrant.data.facebook || '');
+      setInstagram(existingRegistrant.data.instagram || '');
+      setTelegram(existingRegistrant.data.telegram || '');
+      setWebsite(existingRegistrant.data.website || '');
+      setCryptoAddress(existingRegistrant.data.cryptoAddress || '');
     }
   }, [existingRegistrant.data]);
 
@@ -95,17 +105,22 @@ export default function RegistrationPage() {
         email: email.trim(),
         skillLevel,
         interests,
+        facebook: facebook.trim() || undefined,
+        instagram: instagram.trim() || undefined,
+        telegram: telegram.trim() || undefined,
+        website: website.trim() || undefined,
+        cryptoAddress: cryptoAddress.trim() || undefined,
       });
       setShowSuccess(true);
       setTimeout(() => {
         navigate({ to: '/directory' });
       }, 2000);
     } catch (error: any) {
-      setErrors({ submit: error.message || 'Failed to save registration. Please try again.' });
+      setErrors({ submit: error.message || 'Failed to save registration' });
     }
   };
 
-  if (userLoading) {
+  if (userLoading || existingRegistrant.isLoading) {
     return (
       <div className="container py-16 flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -116,180 +131,220 @@ export default function RegistrationPage() {
   if (!isAuthenticated) {
     return (
       <div className="container py-16">
-        <Card className="max-w-2xl mx-auto">
-          <CardHeader>
-            <CardTitle>Sign In Required</CardTitle>
-            <CardDescription>
-              Please sign in with Internet Identity to register as a Web3 novice and receive your unique ID.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                Click the "Sign In" button in the header to get started.
-              </AlertDescription>
-            </Alert>
-          </CardContent>
-        </Card>
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Please log in to register or update your profile.
+          </AlertDescription>
+        </Alert>
       </div>
     );
   }
 
   return (
-    <div className="container py-16">
-      <div className="max-w-3xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">
-            {existingRegistrant.data ? 'Update Your Profile' : 'Join the Community'}
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            {existingRegistrant.data
-              ? 'Keep your information up to date'
-              : 'Tell us about yourself and receive your unique Web3 ID'}
-          </p>
-        </div>
-
-        {/* User Badge Display */}
-        {isAuthenticated && (
-          <Card className="mb-6 border-primary/20 bg-primary/5">
+    <div className="container py-16 max-w-3xl">
+      {/* User Badge Display */}
+      {isAuthenticated && (
+        <div className="mb-8 flex items-center justify-center">
+          <Card className="w-full max-w-md">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-4">
-                <div className="rounded-full bg-primary/10 p-3">
-                  <Award className="h-6 w-6 text-primary" />
+              <div className="flex items-center gap-4">
+                <div className="flex-shrink-0">
+                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+                    <IdCard className="h-8 w-8 text-primary" />
+                  </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold mb-2 flex items-center gap-2">
-                    <IdCard className="h-4 w-4" />
-                    Your Web3 Identity
-                  </h3>
+                  <p className="text-sm text-muted-foreground mb-1">Your Unique ID</p>
                   {badgeLoading ? (
-                    <div className="space-y-2">
-                      <Skeleton className="h-4 w-48" />
-                      <Skeleton className="h-4 w-64" />
-                    </div>
+                    <Skeleton className="h-6 w-32" />
                   ) : badgeError ? (
-                    <Alert variant="destructive" className="mt-2">
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription>
-                        Unable to load your badge. Please try refreshing the page.
-                      </AlertDescription>
-                    </Alert>
+                    <p className="text-sm text-destructive">Badge unavailable</p>
                   ) : userBadge ? (
-                    <div className="space-y-1">
-                      <p className="text-sm">
-                        <span className="font-medium">Unique ID:</span>{' '}
-                        <span className="text-primary font-mono">{userBadge.uniqueId}</span>
-                      </p>
-                      <p className="text-sm">
-                        <span className="font-medium">Badge:</span>{' '}
-                        <span className="text-muted-foreground font-mono">{userBadge.badge}</span>
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        This is your unique identifier on the ICP network. Keep it safe!
-                      </p>
-                    </div>
+                    <>
+                      <p className="text-lg font-bold text-primary">{userBadge.uniqueId}</p>
+                      <Badge variant="secondary" className="mt-1">
+                        <Award className="h-3 w-3 mr-1" />
+                        {userBadge.badge}
+                      </Badge>
+                    </>
                   ) : null}
                 </div>
               </div>
             </CardContent>
           </Card>
-        )}
+        </div>
+      )}
 
-        {showSuccess && (
-          <Alert className="mb-6 border-green-500 bg-green-50 dark:bg-green-950">
-            <CheckCircle2 className="h-4 w-4 text-green-600" />
-            <AlertDescription className="text-green-600">
-              Registration saved successfully! Redirecting to directory...
-            </AlertDescription>
-          </Alert>
-        )}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-3xl">
+            {existingRegistrant.data ? 'Update Your Profile' : 'Join the Community'}
+          </CardTitle>
+          <CardDescription>
+            {existingRegistrant.data
+              ? 'Update your information to keep your profile current'
+              : 'Register to connect with other Web3 learners'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Name */}
+            <div className="space-y-2">
+              <Label htmlFor="name">
+                Name <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your full name"
+                className={errors.name ? 'border-destructive' : ''}
+              />
+              {errors.name && (
+                <p className="text-sm text-destructive">{errors.name}</p>
+              )}
+            </div>
 
-        <Card>
-          <CardContent className="pt-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="name">Display Name *</Label>
-                <Input
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter your display name"
-                  disabled={addRegistrant.isPending}
-                />
-                {errors.name && (
-                  <p className="text-sm text-destructive">{errors.name}</p>
-                )}
-              </div>
+            {/* Email */}
+            <div className="space-y-2">
+              <Label htmlFor="email">
+                Email <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your.email@example.com"
+                className={errors.email ? 'border-destructive' : ''}
+              />
+              {errors.email && (
+                <p className="text-sm text-destructive">{errors.email}</p>
+              )}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.email@example.com"
-                  disabled={addRegistrant.isPending}
-                />
-                {errors.email && (
-                  <p className="text-sm text-destructive">{errors.email}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="skillLevel">Skill Level *</Label>
-                <Select value={skillLevel} onValueChange={setSkillLevel} disabled={addRegistrant.isPending}>
-                  <SelectTrigger id="skillLevel">
-                    <SelectValue placeholder="Select your skill level" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SKILL_LEVELS.map((level) => (
-                      <SelectItem key={level} value={level}>
-                        {level}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.skillLevel && (
-                  <p className="text-sm text-destructive">{errors.skillLevel}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label>Interests * (Select all that apply)</Label>
-                <div className="flex flex-wrap gap-2 p-4 border rounded-lg bg-muted/30">
-                  {INTEREST_OPTIONS.map((interest) => (
-                    <Badge
-                      key={interest}
-                      variant={interests.includes(interest) ? 'default' : 'outline'}
-                      className="cursor-pointer hover:bg-primary/80 transition-colors"
-                      onClick={() => !addRegistrant.isPending && toggleInterest(interest)}
-                    >
-                      {interest}
-                      {interests.includes(interest) && (
-                        <X className="ml-1 h-3 w-3" />
-                      )}
-                    </Badge>
+            {/* Skill Level */}
+            <div className="space-y-2">
+              <Label htmlFor="skillLevel">
+                Skill Level <span className="text-destructive">*</span>
+              </Label>
+              <Select value={skillLevel} onValueChange={setSkillLevel}>
+                <SelectTrigger className={errors.skillLevel ? 'border-destructive' : ''}>
+                  <SelectValue placeholder="Select your skill level" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SKILL_LEVELS.map((level) => (
+                    <SelectItem key={level} value={level}>
+                      {level}
+                    </SelectItem>
                   ))}
-                </div>
-                {errors.interests && (
-                  <p className="text-sm text-destructive">{errors.interests}</p>
-                )}
-              </div>
+                </SelectContent>
+              </Select>
+              {errors.skillLevel && (
+                <p className="text-sm text-destructive">{errors.skillLevel}</p>
+              )}
+            </div>
 
+            {/* Interests */}
+            <div className="space-y-2">
+              <Label>
+                Interests <span className="text-destructive">*</span>
+              </Label>
+              <div className="flex flex-wrap gap-2">
+                {INTEREST_OPTIONS.map((interest) => (
+                  <Badge
+                    key={interest}
+                    variant={interests.includes(interest) ? 'default' : 'outline'}
+                    className="cursor-pointer hover:bg-primary/80"
+                    onClick={() => toggleInterest(interest)}
+                  >
+                    {interest}
+                    {interests.includes(interest) && (
+                      <X className="ml-1 h-3 w-3" />
+                    )}
+                  </Badge>
+                ))}
+              </div>
+              {errors.interests && (
+                <p className="text-sm text-destructive">{errors.interests}</p>
+              )}
+            </div>
+
+            {/* Bio */}
+            <div className="space-y-2">
+              <Label htmlFor="bio">Bio</Label>
+              <Textarea
+                id="bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="Tell us about yourself and your Web3 journey..."
+                rows={4}
+              />
+            </div>
+
+            {/* Social Media & Contact Section */}
+            <div className="space-y-4 pt-4 border-t">
+              <h3 className="text-lg font-semibold">Social Media & Contact (Optional)</h3>
+              
+              {/* Facebook */}
               <div className="space-y-2">
-                <Label htmlFor="bio">Bio (Optional)</Label>
-                <Textarea
-                  id="bio"
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell us a bit about yourself and your Web3 journey..."
-                  rows={4}
-                  disabled={addRegistrant.isPending}
+                <Label htmlFor="facebook">Facebook</Label>
+                <Input
+                  id="facebook"
+                  value={facebook}
+                  onChange={(e) => setFacebook(e.target.value)}
+                  placeholder="Facebook profile URL or username"
                 />
               </div>
 
+              {/* Instagram */}
+              <div className="space-y-2">
+                <Label htmlFor="instagram">Instagram</Label>
+                <Input
+                  id="instagram"
+                  value={instagram}
+                  onChange={(e) => setInstagram(e.target.value)}
+                  placeholder="Instagram handle or profile URL"
+                />
+              </div>
+
+              {/* Telegram */}
+              <div className="space-y-2">
+                <Label htmlFor="telegram">Telegram</Label>
+                <Input
+                  id="telegram"
+                  value={telegram}
+                  onChange={(e) => setTelegram(e.target.value)}
+                  placeholder="Telegram username"
+                />
+              </div>
+
+              {/* Website */}
+              <div className="space-y-2">
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  placeholder="https://yourwebsite.com"
+                />
+              </div>
+
+              {/* Crypto Address */}
+              <div className="space-y-2">
+                <Label htmlFor="cryptoAddress">Crypto address</Label>
+                <Input
+                  id="cryptoAddress"
+                  value={cryptoAddress}
+                  onChange={(e) => setCryptoAddress(e.target.value)}
+                  placeholder="Your crypto wallet address"
+                />
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex flex-col gap-4">
               {errors.submit && (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
@@ -297,36 +352,36 @@ export default function RegistrationPage() {
                 </Alert>
               )}
 
-              <div className="flex gap-4">
-                <Button
-                  type="submit"
-                  disabled={addRegistrant.isPending}
-                  className="flex-1"
-                >
-                  {addRegistrant.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : existingRegistrant.data ? (
-                    'Update Profile'
-                  ) : (
-                    'Complete Registration'
-                  )}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => navigate({ to: '/directory' })}
-                  disabled={addRegistrant.isPending}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+              {showSuccess && (
+                <Alert className="bg-green-50 text-green-900 border-green-200">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <AlertDescription>
+                    Registration successful! Redirecting to directory...
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              <Button
+                type="submit"
+                size="lg"
+                disabled={addRegistrant.isPending || showSuccess}
+                className="w-full"
+              >
+                {addRegistrant.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : existingRegistrant.data ? (
+                  'Update Profile'
+                ) : (
+                  'Complete Registration'
+                )}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

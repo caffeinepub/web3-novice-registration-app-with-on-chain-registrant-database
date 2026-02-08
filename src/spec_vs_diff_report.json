@@ -1,67 +1,68 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T00:56:45.235Z",
-  "summary": "Diff adds/enhances frontend deployment diagnostics (runtime inference of network/canister ID, mismatch detection UI) and a DEPLOYMENT.md guide, but does not provide evidence of an actual IC redeploy, recorded canister IDs, or verified reachable mainnet URL outcomes requested in REQ-31/32/33.",
+  "generatedAt": "2026-02-08T01:07:32.901Z",
+  "summary": "Backend was extended to include optional social fields and crypto address on the Registrant type and a data migration module was added. Frontend registration and directory pages appear to add/consume these fields, but there is evidence that OISY wallet-related code/config may still exist (e.g., oisyWallet utility and an OisyWalletNavItem component), and multiple unrelated deployment/diagnostics/theme changes were introduced that were not requested.",
   "missing_requirements": [
     {
-      "id": "REQ-31",
-      "requirement": "Re-run `dfx deploy --network ic` and capture the deployed frontend and backend canister IDs from the deployment output.",
-      "reason": "The diff contains only code/docs changes; there is no deployment output, no recorded canister IDs, and no indication that `dfx deploy --network ic` was executed successfully.",
+      "id": "REQ-34",
+      "requirement": "Remove the in-app wallet entry point from the application navigation (desktop header nav and mobile menu) so users no longer see any Wallet/OISY Wallet item, and ensure there is no remaining user-facing wallet-related UI text or tooltip in the app navigation.",
+      "reason": "The diff indicates a dedicated wallet navigation item component still exists, which suggests the wallet entry point may not have been fully removed from navigation. The AppLayout snippet is truncated, so it is not possible to confirm the wallet item is absent from both desktop and mobile navigation.",
       "evidence": [
-        "frontend/DEPLOYMENT.md",
-        "frontend/src/utils/deploymentInfo.ts",
-        "frontend/src/components/DeploymentInfo.tsx"
+        "frontend/src/components/OisyWalletNavItem.tsx",
+        "frontend/src/components/AppLayout.tsx"
       ]
     },
     {
-      "id": "REQ-32",
-      "requirement": "Verify the deployed frontend is reachable via its canister URL on icp0.io and does not show “Canister ID Not Resolved”, addressing the previously failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`.",
-      "reason": "No runtime verification results or remediation of the specific previously failing URL are shown in the diff; only diagnostic tooling/documentation was added.",
+      "id": "REQ-35",
+      "requirement": "Remove unused OISY wallet configuration usage from the frontend so the app does not depend on or reference the OISY wallet URL environment variable (VITE_OISY_WALLET_URL) for any UI behavior.",
+      "reason": "A wallet-specific utility file remains present in the diff, which strongly suggests the frontend may still contain runtime code paths related to opening/using an OISY wallet URL configuration.",
       "evidence": [
-        "frontend/DEPLOYMENT.md"
-      ]
-    },
-    {
-      "id": "REQ-33",
-      "requirement": "After deployment, use the in-app Deployment Info diagnostics to confirm no frontend canister/domain mismatch and that the backend canister ID is correctly configured/visible for mainnet usage.",
-      "reason": "The diff updates the diagnostics UI/logic, but provides no evidence of an actual mainnet session confirmation (Network label, shareable URL match, backend canister ID not empty, and no mismatch warning).",
-      "evidence": [
-        "frontend/src/components/DeploymentInfo.tsx",
-        "frontend/src/utils/deploymentInfo.ts",
-        "frontend/DEPLOYMENT.md"
+        "frontend/src/utils/oisyWallet.ts",
+        "frontend/src/components/OisyWalletNavItem.tsx"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Added/expanded mismatch detection UI with destructive alert and remediation actions (e.g., “Correct Public URL”, open/copy).",
-      "reason": "BuildRequest focuses on deploying and confirming no mismatch warning is shown after deployment; it does not explicitly request adding new mismatch remediation UI flows (open/copy buttons, destructive alert panel).",
+      "description": "Added a global 'Canister ID Mismatch Detected' warning banner with an 'Open Correct URL' button in the app layout.",
+      "reason": "Not requested by any requirement (REQ-34..REQ-38) and unrelated to removing wallet links or adding social/crypto fields.",
       "evidence": [
-        "frontend/src/components/DeploymentInfo.tsx"
+        "frontend/src/components/AppLayout.tsx"
       ]
     },
     {
-      "description": "Runtime inference system for network/canister ID (icp0.io/ic0.app/raw domains) and normalized URL generation logic.",
-      "reason": "BuildRequest asks to redeploy and verify reachability/config; it does not explicitly request implementing inference heuristics or supporting multiple env var names (e.g., VITE_CANISTER_ID vs VITE_FRONTEND_CANISTER_ID).",
+      "description": "Expanded deployment diagnostics tooling and documentation (deployment info utilities/components and DEPLOYMENT.md updates).",
+      "reason": "Not requested by any requirement (REQ-34..REQ-38).",
       "evidence": [
-        "frontend/src/utils/deploymentInfo.ts"
+        "frontend-file-summaries.txt"
       ]
     },
     {
-      "description": "Added a comprehensive standalone deployment guide with checklists and templates.",
-      "reason": "BuildRequest requests performing and recording an actual deployment/verification, not adding new documentation artifacts.",
+      "description": "Introduced a new React Query hook for fetching registrant count with polling/invalidation behavior.",
+      "reason": "Not requested by any requirement (REQ-34..REQ-38).",
       "evidence": [
-        "frontend/DEPLOYMENT.md"
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Significant styling/theme changes (global OKLCH warm palette updates and Tailwind config changes).",
+      "reason": "Not requested by any requirement (REQ-34..REQ-38).",
+      "evidence": [
+        "frontend-file-summaries.txt"
       ]
     }
   ],
-  "confidence": 0.74,
+  "confidence": 0.62,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/DEPLOYMENT.md",
-    "frontend/src/components/DeploymentInfo.tsx",
-    "frontend/src/utils/deploymentInfo.ts",
+    "frontend/src/components/AppLayout.tsx",
+    "frontend/src/components/OisyWalletNavItem.tsx",
+    "frontend/src/pages/DirectoryPage.tsx",
+    "frontend/src/pages/RegistrationPage.tsx",
+    "frontend/src/utils/oisyWallet.ts",
     "project_state.json"
   ]
 }

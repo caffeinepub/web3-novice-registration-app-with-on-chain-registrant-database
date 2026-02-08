@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-re-run-the-internet-computer-deployment-dfx-deploy-network-ic-and-capture-the-deployed-frontend-and-backend-canister-ids-from-the-deployment-output",
-      "featureTitle": "Re-run the Internet Computer deployment (`dfx deploy --network ic`) and capture the deployed frontend and backend canister IDs from the deployment output.",
+      "featureId": "feature-remove-the-in-app-wallet-entry-point-from-the-application-navigation-desktop-header-nav-and-mobile-menu-so-users-no-longer-see-any-wallet-oisy-wallet-item-and-ensure-there-is-no-remaining-user-facing-wallet-related-ui-text-or-tooltip-in-the-app-navigation",
+      "featureTitle": "Remove the in-app wallet entry point from the application navigation (desktop header nav and mobile menu) so users no longer see any Wallet/OISY Wallet item, and ensure there is no remaining user-facing wallet-related UI text or tooltip in the app navigation.",
       "files": [
-        "frontend/DEPLOYMENT.md"
+        "frontend/src/components/AppLayout.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -16,16 +16,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-31"
+        "REQ-34"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-verify-the-deployed-frontend-is-reachable-via-its-canister-url-on-icp0-io-and-does-not-show-the-gateway-error-canister-id-not-resolved-specifically-addressing-the-previously-failing-url-https-5cpxd-piaaa-aaaap-qib3q-cai-icp0-io",
-      "featureTitle": "Verify the deployed frontend is reachable via its canister URL on icp0.io and does not show the gateway error “Canister ID Not Resolved”, specifically addressing the previously failing URL `https://5cpxd-piaaa-aaaap-qib3q-cai.icp0.io`.",
+      "featureId": "feature-remove-unused-oisy-wallet-configuration-usage-from-the-frontend-so-the-app-does-not-depend-on-or-reference-the-oisy-wallet-url-environment-variable-vite-oisy-wallet-url-for-any-ui-behavior",
+      "featureTitle": "Remove unused OISY wallet configuration usage from the frontend so the app does not depend on or reference the OISY wallet URL environment variable (VITE_OISY_WALLET_URL) for any UI behavior.",
       "files": [
-        "frontend/DEPLOYMENT.md",
-        "frontend/src/utils/deploymentInfo.ts"
+        "frontend/src/components/AppLayout.tsx",
+        "frontend/src/components/OisyWalletNavItem.tsx",
+        "frontend/src/utils/oisyWallet.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -36,17 +37,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-32"
+        "REQ-35"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-after-deployment-use-the-in-app-deployment-info-diagnostics-to-confirm-there-is-no-frontend-canister-domain-mismatch-and-that-the-backend-canister-id-is-correctly-configured-visible-for-mainnet-usage",
-      "featureTitle": "After deployment, use the in-app Deployment Info diagnostics to confirm there is no frontend canister/domain mismatch and that the backend canister ID is correctly configured/visible for mainnet usage.",
+      "featureId": "feature-update-the-registration-profile-form-ui-to-allow-authenticated-users-to-input-and-save-optional-social-links-facebook-instagram-telegram-website-and-an-optional-crypto-address-as-part-of-their-registrant-profile-without-making-these-fields-required",
+      "featureTitle": "Update the registration/profile form UI to allow authenticated users to input and save optional social links (Facebook, Instagram, Telegram, website) and an optional crypto address as part of their registrant profile, without making these fields required.",
       "files": [
-        "frontend/DEPLOYMENT.md",
-        "frontend/src/components/DeploymentInfo.tsx",
-        "frontend/src/utils/deploymentInfo.ts"
+        "frontend/src/pages/RegistrationPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -57,7 +56,26 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-33"
+        "REQ-37"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-directory-ui-to-display-a-registrant-s-social-links-facebook-instagram-telegram-website-and-crypto-address-when-present-and-hide-each-field-when-it-is-not-provided",
+      "featureTitle": "Update the directory UI to display a registrant’s social links (Facebook, Instagram, Telegram, website) and crypto address when present, and hide each field when it is not provided.",
+      "files": [
+        "frontend/src/pages/DirectoryPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-38"
       ],
       "confidence": "high"
     }

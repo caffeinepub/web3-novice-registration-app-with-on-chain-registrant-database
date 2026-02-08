@@ -14,10 +14,15 @@ export interface UserBadge {
 }
 export interface Registrant {
     id: string;
+    cryptoAddress?: string;
     interests: Array<string>;
+    instagram?: string;
     name: string;
     email: string;
+    website?: string;
+    facebook?: string;
     skillLevel: string;
+    telegram?: string;
 }
 export interface UserProfile {
     name: string;

@@ -1,94 +1,55 @@
 {
   "kind": "build_request",
-  "title": "Add a 3D “Digital World” planet page that visualizes total app signups as inhabitants",
+  "title": "Add in-app access flow to the OISY wallet",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-22",
-      "text": "Add a new page that visualizes the community as a digital world: render a 3D planet and show an inhabitant representation for each registrant; also display the total inhabitant count equal to the total number of app signups/registrations.",
+      "id": "REQ-26",
+      "text": "Add a user-facing entry point in the app header navigation (desktop + mobile menu) that lets authenticated users open their OISY wallet from within the app via an external link (new tab) with safe target/rel attributes.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "recent-messages-6"
         ],
         "quotes": [
-          "une page supplémentaire, chaque nouveau membre apparait dans un monde digital, sur une planète où on peut visualiser au fur et à mesure le nombre d'habitant qui représente le nombre d'incrit via notre app"
+          "je veux que mes utilisateurs puissent accèder à leur wallet OISY via mon app"
         ]
       },
       "acceptanceCriteria": [
-        "A new route exists (e.g., \"/world\") that loads a new page component without breaking existing routes (/ , /register, /directory, /events).",
-        "The page renders a 3D planet scene using React Three Fiber/Three.js and shows N inhabitant markers/particles/models where N equals the current number of registrants returned by the backend.",
-        "The page displays an explicit numeric total (e.g., \"Inhabitants: 123\") that matches the number used for the visualization.",
-        "If the user is not authenticated (and therefore cannot query registrants), the page shows a sign-in prompt and does not crash.",
-        "The page includes a loading state and a non-blocking error state if data fetch fails."
+        "When the user is authenticated, a \"Wallet\" (or \"OISY Wallet\") navigation item is visible in the header navigation and in the mobile menu.",
+        "Clicking the navigation item opens the OISY wallet in a new browser tab/window using target=\"_blank\" and rel=\"noopener noreferrer\".",
+        "When the user is not authenticated, the wallet navigation item is either hidden or replaced with a disabled/locked state that clearly prompts the user to sign in first (English UI text).",
+        "No changes are made to immutable frontend paths listed in SYSTEM_CONTEXT (compose existing UI components instead)."
       ]
     },
     {
-      "id": "REQ-23",
-      "text": "Expose a backend query API that returns the total number of registrants (signups) without requiring the frontend to fetch and count the full registrant list, and consume it from the new Digital World page via a new React Query hook.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "on peut visualiser au fur et à mesure le nombre d'habitant qui représente le nombre d'incrit via notre app"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend: a new query method exists that returns the registrant count as a number type usable from the generated frontend bindings, and it enforces the same authentication policy as listAllRegistrants/searchRegistrants (no public unauthenticated access unless already used elsewhere).",
-        "Frontend: the Digital World page calls the count API and renders the returned number.",
-        "Frontend: the count query is periodically refreshed (polling) so the displayed number can increase over time without a full page reload.",
-        "The count displayed on the page matches the length of listAllRegistrants() for the same authenticated user session."
-      ]
-    },
-    {
-      "id": "REQ-24",
-      "text": "Make the visualization feel like “each new member appears”: when the registrant total increases, add new inhabitant visuals with an entry animation; keep placement deterministic and stable across refreshes (so existing inhabitants do not jump).",
+      "id": "REQ-27",
+      "text": "Provide a configurable OISY wallet URL that the frontend uses for the wallet navigation link, and show a clear, non-blocking UI message if the URL is not configured.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "recent-messages-6"
         ],
         "quotes": [
-          "chaque nouveau membre apparait dans un monde digital, sur une planète"
+          "je veux que mes utilisateurs puissent accèder à leur wallet OISY via mon app"
         ]
       },
       "acceptanceCriteria": [
-        "When the count increases between two successful polls, the page adds the difference as new inhabitants and animates them appearing (e.g., scale/opacity rise) without re-randomizing existing inhabitants.",
-        "Inhabitant placement is deterministic (e.g., seeded by index) so the same registrant count produces the same distribution on the planet across reloads.",
-        "The page provides basic performance safeguards (e.g., cap detail levels, use instancing/points, or reduce effects) so it remains usable for larger counts (at least several hundred)."
-      ]
-    },
-    {
-      "id": "REQ-25",
-      "text": "Add navigation access to the new Digital World page from the app header navigation and ensure the mobile menu also includes it.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "une page supplémentaire"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Desktop navigation includes a link (English label) to the new page.",
-        "Mobile navigation includes the same link and closes the menu on navigation, consistent with existing links.",
-        "Navigation works with the current TanStack Router setup and does not break existing links."
+        "The wallet link URL is configurable via a single frontend configuration point (e.g., an environment variable) without requiring backend changes.",
+        "If the wallet URL is missing/empty, the UI does not crash; the wallet action is disabled and a concise English message explains that the wallet link is not configured.",
+        "Default app flows (registration, directory browsing, world page) continue to work unchanged when the wallet URL is not configured."
       ]
     }
   ],
   "constraints": [
-    "Use English for any user-facing text added for the new page and navigation labels.",
-    "Backend must remain single-actor in backend/main.mo; only add migration.mo if a stable-state upgrade is strictly required (avoid schema changes if possible).",
-    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui; compose existing components instead.",
-    "No real-time sockets/WebSockets; use React Query polling/refresh to update counts over time."
+    "Backend must remain a single Motoko actor (no additional backend services).",
+    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or any files under frontend/src/components/ui; compose them instead.",
+    "Do not add unsupported wallet integrations (e.g., MetaMask/WalletConnect)."
   ],
   "nonGoals": [
-    "Do not implement multiplayer, real-time avatars, chat, or presence features.",
-    "Do not add third-party analytics or external databases to track signups.",
-    "Do not require new user profile fields solely for the visualization (avoid adding timestamps/geo/etc.)."
+    "Embedding the OISY wallet inside an iframe with transaction signing inside this app.",
+    "Implementing new backend APIs for wallet balances/transactions.",
+    "Adding any third-party authentication system beyond Internet Identity."
   ],
   "imageRequirements": {
     "required": [],

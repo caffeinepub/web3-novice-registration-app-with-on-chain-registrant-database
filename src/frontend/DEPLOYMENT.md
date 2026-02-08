@@ -67,3 +67,15 @@ The frontend has been hardened to work reliably on mainnet even when build-time 
 ### Environment Variables (Optional but Recommended)
 
 For optimal functionality, set these environment variables before building:
+
+#### Required for Production
+- `VITE_BACKEND_CANISTER_ID`: Backend canister ID (auto-detected if not set)
+- `VITE_FRONTEND_CANISTER_ID`: Frontend canister ID (auto-detected if not set)
+
+#### Optional Features
+- `VITE_OISY_WALLET_URL`: URL to the OISY wallet (e.g., `https://oisy.com`)
+  - If not set, the Wallet navigation item will be disabled with a message explaining the wallet link is not configured
+  - When set, authenticated users can access their OISY wallet via the navigation menu
+  - The wallet opens in a new tab with secure link attributes
+
+Example `.env.production` file:

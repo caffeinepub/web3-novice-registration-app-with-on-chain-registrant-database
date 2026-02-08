@@ -1,97 +1,53 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "3D Digital World page visualizing total registrants as planet inhabitants",
+  "title": "In-app header entry point for OISY wallet (configurable external link)",
   "requirements": [
     {
-      "id": "REQ-22",
-      "summary": "Add a new /world page that renders a 3D planet and visualizes one inhabitant per registrant, showing the total count from the backend with auth-aware, loading, and error states.",
+      "id": "REQ-26",
+      "summary": "Add a header + mobile-menu navigation entry that lets authenticated users open the OISY wallet in a new tab with safe link attributes, and shows a clear sign-in prompt state otherwise.",
       "acceptanceCriteria": [
-        "A new route exists (e.g., \"/world\") that loads a new page component without breaking existing routes (/ , /register, /directory, /events).",
-        "The page renders a 3D planet scene using React Three Fiber/Three.js and shows N inhabitant markers/particles/models where N equals the current number of registrants returned by the backend.",
-        "The page displays an explicit numeric total (e.g., \"Inhabitants: 123\") that matches the number used for the visualization.",
-        "If the user is not authenticated (and therefore cannot query registrants), the page shows a sign-in prompt and does not crash.",
-        "The page includes a loading state and a non-blocking error state if data fetch fails."
+        "When the user is authenticated, a \"Wallet\" (or \"OISY Wallet\") navigation item is visible in the header navigation and in the mobile menu.",
+        "Clicking the navigation item opens the OISY wallet in a new browser tab/window using target=\"_blank\" and rel=\"noopener noreferrer\".",
+        "When the user is not authenticated, the wallet navigation item is either hidden or replaced with a disabled/locked state that clearly prompts the user to sign in first (English UI text).",
+        "No changes are made to immutable frontend paths listed in SYSTEM_CONTEXT (compose existing UI components instead)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/WorldPage.tsx",
+          "path": "frontend/src/components/OisyWalletNavItem.tsx",
           "operation": "create",
-          "description": "Create the Digital World page UI (English-only text) that: checks authentication using existing auth hooks (authorization component capability), shows a sign-in prompt when unauthenticated (reuse AuthControls), and when authenticated renders the 3D scene plus an explicit \"Inhabitants: <N>\" total with loading and non-blocking error states. Verify the component's usage instructions before implementing."
+          "description": "Create a small reusable nav item component that renders (1) an enabled external-link anchor for authenticated users when configured, or (2) a disabled/locked UI state prompting sign-in when unauthenticated. Use the app’s existing authentication state via useCurrentUser (built on the authorization component’s frontend authentication approach). Verify the component's usage instructions before implementing."
         },
-        {
-          "path": "frontend/src/components/world/PlanetWorldScene.tsx",
-          "operation": "create",
-          "description": "Implement the 3D planet visualization using React Three Fiber/Three.js: render a planet plus inhabitant visuals driven by a numeric count prop, designed to support several hundred inhabitants without locking the UI (e.g., instancing/points and capped effects)."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Register the new TanStack Router route at \"/world\" and wire it to the new WorldPage component without impacting existing routes."
-        }
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "summary": "Consume the backend registrant-count capability from the Digital World page via a new React Query hook with polling refresh.",
-      "acceptanceCriteria": [
-        "Backend: a new query method exists that returns the registrant count as a number type usable from the generated frontend bindings, and it enforces the same authentication policy as listAllRegistrants/searchRegistrants (no public unauthenticated access unless already used elsewhere).",
-        "Frontend: the Digital World page calls the count API and renders the returned number.",
-        "Frontend: the count query is periodically refreshed (polling) so the displayed number can increase over time without a full page reload.",
-        "The count displayed on the page matches the length of listAllRegistrants() for the same authenticated user session."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add a new React Query hook to fetch the total registrant count from the existing backend capability (getTotalNumberOfRegistrants), convert bigint to number safely for display, and enable periodic polling/refresh per constraints (no sockets)."
-        },
-        {
-          "path": "frontend/src/pages/WorldPage.tsx",
-          "operation": "modify",
-          "description": "Use the new count hook to drive both the explicit total display and the 3D inhabitant count; handle authorization failures gracefully (authorization component capability) by showing a sign-in prompt instead of crashing. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-24",
-      "summary": "Make inhabitant placement deterministic and animate only newly added inhabitants when the count increases between polls, with performance safeguards.",
-      "acceptanceCriteria": [
-        "When the count increases between two successful polls, the page adds the difference as new inhabitants and animates them appearing (e.g., scale/opacity rise) without re-randomizing existing inhabitants.",
-        "Inhabitant placement is deterministic (e.g., seeded by index) so the same registrant count produces the same distribution on the planet across reloads.",
-        "The page provides basic performance safeguards (e.g., cap detail levels, use instancing/points, or reduce effects) so it remains usable for larger counts (at least several hundred)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/utils/worldPlacement.ts",
-          "operation": "create",
-          "description": "Add deterministic placement helpers (e.g., seeded-by-index random function and sphere-distribution function) to ensure stable inhabitant positions across reloads for the same count."
-        },
-        {
-          "path": "frontend/src/components/world/PlanetWorldScene.tsx",
-          "operation": "modify",
-          "description": "Update the 3D scene to: (1) compute stable inhabitant transforms from deterministic placement utilities, (2) detect count increases and animate only the newly added indices with an entry animation, and (3) include performance safeguards such as instanced rendering/points and capped visual complexity."
-        },
-        {
-          "path": "frontend/src/pages/WorldPage.tsx",
-          "operation": "modify",
-          "description": "Track prior successful counts across polls to provide the scene the information needed to animate new inhabitants only (difference since last poll) while keeping existing inhabitants stable."
-        }
-      ]
-    },
-    {
-      "id": "REQ-25",
-      "summary": "Add header and mobile navigation links to the new Digital World page and ensure mobile menu behavior matches existing links.",
-      "acceptanceCriteria": [
-        "Desktop navigation includes a link (English label) to the new page.",
-        "Mobile navigation includes the same link and closes the menu on navigation, consistent with existing links.",
-        "Navigation works with the current TanStack Router setup and does not break existing links."
-      ],
-      "file_operations": [
         {
           "path": "frontend/src/components/AppLayout.tsx",
           "operation": "modify",
-          "description": "Add a new navigation Link to \"/world\" with an English label (e.g., \"World\") in both the desktop header nav and the mobile menu; ensure the mobile menu closes on navigation consistent with existing links."
+          "description": "Wire the new OISY wallet navigation item into both the desktop header nav and the mobile menu, ensuring the link opens in a new tab with rel=\"noopener noreferrer\" and matches existing header/mobile styling patterns. Compose existing UI components (do not modify files under frontend/src/components/ui). Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-27",
+      "summary": "Add a single frontend configuration point for the OISY wallet URL and disable the wallet action with a non-blocking explanatory message when it is not configured.",
+      "acceptanceCriteria": [
+        "The wallet link URL is configurable via a single frontend configuration point (e.g., an environment variable) without requiring backend changes.",
+        "If the wallet URL is missing/empty, the UI does not crash; the wallet action is disabled and a concise English message explains that the wallet link is not configured.",
+        "Default app flows (registration, directory browsing, world page) continue to work unchanged when the wallet URL is not configured."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/utils/oisyWallet.ts",
+          "operation": "create",
+          "description": "Add a single, centralized frontend configuration utility that reads the OISY wallet URL from a build-time env var (e.g., import.meta.env.VITE_OISY_WALLET_URL), normalizes/validates presence (non-empty), and exposes a safe getter the UI can consume (returning empty/undefined when not configured)."
+        },
+        {
+          "path": "frontend/src/components/OisyWalletNavItem.tsx",
+          "operation": "modify",
+          "description": "Integrate the OISY wallet config utility so the nav item is disabled when the URL is missing/empty, and render a concise non-blocking English message (e.g., helper text in the menu) explaining the wallet link is not configured. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/DEPLOYMENT.md",
+          "operation": "modify",
+          "description": "Document the new frontend env var used to configure the OISY wallet link (e.g., VITE_OISY_WALLET_URL), including a brief note that the Wallet navigation item will be disabled and show a message when unset."
         }
       ]
     }

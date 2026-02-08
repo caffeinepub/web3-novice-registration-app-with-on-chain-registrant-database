@@ -2,12 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-new-page-that-visualizes-the-community-as-a-digital-world-render-a-3d-planet-and-show-an-inhabitant-representation-for-each-registrant-also-display-the-total-inhabitant-count-equal-to-the-total-number-of-app-signups-registrations",
-      "featureTitle": "Add a new page that visualizes the community as a digital world: render a 3D planet and show an inhabitant representation for each registrant; also display the total inhabitant count equal to the total number of app signups/registrations.",
+      "featureId": "feature-add-a-user-facing-entry-point-in-the-app-header-navigation-desktop-mobile-menu-that-lets-authenticated-users-open-their-oisy-wallet-from-within-the-app-via-an-external-link-new-tab-with-safe-target-rel-attributes",
+      "featureTitle": "Add a user-facing entry point in the app header navigation (desktop + mobile menu) that lets authenticated users open their OISY wallet from within the app via an external link (new tab) with safe target/rel attributes.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/world/PlanetWorldScene.tsx",
-        "frontend/src/pages/WorldPage.tsx"
+        "frontend/src/components/AppLayout.tsx",
+        "frontend/src/components/OisyWalletNavItem.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -18,16 +17,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-22"
+        "REQ-26"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-expose-a-backend-query-api-that-returns-the-total-number-of-registrants-signups-without-requiring-the-frontend-to-fetch-and-count-the-full-registrant-list-and-consume-it-from-the-new-digital-world-page-via-a-new-react-query-hook",
-      "featureTitle": "Expose a backend query API that returns the total number of registrants (signups) without requiring the frontend to fetch and count the full registrant list, and consume it from the new Digital World page via a new React Query hook.",
+      "featureId": "feature-provide-a-configurable-oisy-wallet-url-that-the-frontend-uses-for-the-wallet-navigation-link-and-show-a-clear-non-blocking-ui-message-if-the-url-is-not-configured",
+      "featureTitle": "Provide a configurable OISY wallet URL that the frontend uses for the wallet navigation link, and show a clear, non-blocking UI message if the URL is not configured.",
       "files": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/WorldPage.tsx"
+        "frontend/DEPLOYMENT.md",
+        "frontend/src/components/OisyWalletNavItem.tsx",
+        "frontend/src/utils/oisyWallet.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -38,47 +38,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-23"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-make-the-visualization-feel-like-each-new-member-appears-when-the-registrant-total-increases-add-new-inhabitant-visuals-with-an-entry-animation-keep-placement-deterministic-and-stable-across-refreshes-so-existing-inhabitants-do-not-jump",
-      "featureTitle": "Make the visualization feel like “each new member appears”: when the registrant total increases, add new inhabitant visuals with an entry animation; keep placement deterministic and stable across refreshes (so existing inhabitants do not jump).",
-      "files": [
-        "frontend/src/components/world/PlanetWorldScene.tsx",
-        "frontend/src/pages/WorldPage.tsx",
-        "frontend/src/utils/worldPlacement.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-24"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-navigation-access-to-the-new-digital-world-page-from-the-app-header-navigation-and-ensure-the-mobile-menu-also-includes-it",
-      "featureTitle": "Add navigation access to the new Digital World page from the app header navigation and ensure the mobile menu also includes it.",
-      "files": [
-        "frontend/src/components/AppLayout.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-25"
+        "REQ-27"
       ],
       "confidence": "high"
     }
